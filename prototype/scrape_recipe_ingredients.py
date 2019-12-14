@@ -14,19 +14,20 @@ def get_recipe_ingredients(recipe_id, persons=4):
     for row in rows:
         amount, unit, ingredient = row.findAll('td')
         ingredient_text = ingredient.get_text().strip()
-        if '\t' in ingredient_text:
-            index = ingredient_text.index('\t')
+        if len(ingredient_text) > 0:
             print('Ingredient:')
-            print(ingredient_text[0:index])
-            if len(amount.get_text()) > 0:
-                print('Amount:')
-                print(amount.get_text())
-            if len(unit.get_text()) > 0:
-                print('Unit:')
-                print(unit.get_text())
-            print('')
+            print(ingredient_text)
+        amount_text = amount.get_text().strip()
+        if len(amount_text) > 0:
+            print('Amount:')
+            print(amount_text)
+        unit_text = unit.get_text().strip()
+        if len(unit_text) > 0 and (chr(160) != unit_text): #exclude non-breaking space
+            print( 'Unit:')
+            print(unit_text )
+        print('')
 
     return soup
 
-
-#get_recipe_ingredients(33005, 4)
+for i in range(5):
+    get_recipe_ingredients(i+33000, 4)
