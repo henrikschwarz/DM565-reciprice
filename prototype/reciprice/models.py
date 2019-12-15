@@ -8,21 +8,25 @@ class User:
         self._id = username
         self.created = created
 
+    # Returns the dictionary key that identifies this user
+    def get_id(self):
+        return {'_id': self._id}
+
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
     def replace(self):
-        mongo.db.users.replace_one(self._id, self.__dict__, upsert=True)
+        mongo.db.users.replace_one(self.get_id(), self.__dict__, upsert=True)
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self._id, {'_id': username})
+            mongo.db.users.update_one(self.get_id(), {'_id': username})
         self._id = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self._id, {'created': created})
+            mongo.db.users.update_one(self.get_id(), {'created': created})
         self.created = created
 
     def __repr__(self):
@@ -31,13 +35,13 @@ class User:
 
 # Returns a user object with data populated from the database
 def load_user(username):
-    user = mongo.db.users.find_one(username)
+    user = mongo.db.users.find_one({'_id': username})
     return User(user['_id'], user['created'])
 
 
 # Returns a user object or cause 404 error
 def load_user_or_404(username):
-    user = mongo.db.users.find_one_or_404(username)
+    user = mongo.db.users.find_one_or_404({'_id': username})
     return User(user['_id'], user['created'])
 
 
@@ -76,15 +80,12 @@ def get_recipe(name):
     return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
 
 class Ingredient:
-    def __init__(self, name, alias, created, price_estimate, price_history):
+    def __init__(self, name, product_list):
         self._id = name
-        self.alias = alias
-        self.created = created
-        self.price_estimate = price_estimate
-        self.price_history = price_history
+        self.product_list = product_list
 
     def insert(self):
-        ingredients = mongo.db.ingredient
+        ingredients = mongo.db.ingredients
         return ingredients.insert(self.__dict__)
         
 
@@ -92,3 +93,16 @@ def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404(name)
     print(ingredient)
     return Ingredient(name=ingredient['_id'], alias=ingredient['alias'], created=ingredient['created'], price_estimate=ingredient['price_estimate'], price_history=ingredient['price_history'])
+
+class Product:
+    def __init__(self, ean, name, amount=None, unit=None, price, price_history):
+        self._id = ean
+        self.name = name
+        self.amount = amount
+        self.unit = unit
+        self.price = price
+        self.price_history = price_history
+
+    def insert(self):
+        products = mongo.db.products
+        return products.insert(self.__dict__)
