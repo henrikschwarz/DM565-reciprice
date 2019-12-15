@@ -69,6 +69,11 @@ class Recipe:
     def insert(self):
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
+
+def get_recipe(name):
+    recipes = mongo.db.recipes
+    return recipes.find_one_or_404(name)
+    
  
 
 class Ingredient:
@@ -78,6 +83,12 @@ class Ingredient:
         self.created = created
         self.price_estimate = price_estimate
         self.price_history = price_history
+
+    def insert(self):
+        ingredients = mongo.db.ingredient
+        ingredients.insert(self.__dict__)
+        
+
 
 # Returns a list of each username in the database
 def get_usernames():
