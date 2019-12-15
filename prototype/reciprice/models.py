@@ -22,14 +22,12 @@ class User:
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
-        users = mongo.db.users
         if update_db:
             mongo.db.users.update_one(self.get_id(), {'_id': username})
         self.username = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
-        users = mongo.db.users
         if update_db:
             mongo.db.users.update_one(self.get_id(), {'created': created})
         self.created = created
@@ -37,7 +35,6 @@ class User:
 # Returns a user object with data populated from the database
 def load_user(username):
     users = mongo.db.users
-    user = users.find_one({'_id': username})
     def __repr__(self):
         return 'User(%s, %s)' % (self.username, self.created)
 
