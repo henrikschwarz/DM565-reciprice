@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from .extentions import mongo
 
+
 class User:
     def __init__(self, username, created):
         self._id = username
@@ -9,35 +10,25 @@ class User:
 
     # Returns the dictionary key that identifies this user
     def get_id(self):
-        return {'_id': self.username}
-
-    # Returns the dictionary representation of this user
-    def get_dict(self):
-        return self.__dict__ 
+        return {'_id': self._id}
 
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
     def replace(self):
-        mongo.db.users.replace_one(self.get_id(), self.get_dict(), upsert=True)
+        mongo.db.users.replace_one(self.get_id(), self.__dict__, upsert=True)
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
-        users = mongo.db.users
         if update_db:
             mongo.db.users.update_one(self.get_id(), {'_id': username})
-        self.username = username
+        self._id = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
-        users = mongo.db.users
         if update_db:
             mongo.db.users.update_one(self.get_id(), {'created': created})
         self.created = created
 
-# Returns a user object with data populated from the database
-def load_user(username):
-    users = mongo.db.users
-    user = users.find_one({'_id': username})
     def __repr__(self):
         return 'User(%s, %s)' % (self.username, self.created)
 
@@ -61,6 +52,17 @@ def create_user(username):
     user.replace()
     return user
 
+
+# Returns a list of each username in the database
+def get_usernames():
+    return list(map(str, mongo.db.users.distinct('_id')))
+
+
+# Returns the count of users
+def user_count():
+    return mongo.db.users.count_documents({})
+
+
 class Recipe:
     def __init__(self, name, procedure, ingredient_list, source, created):
         self._id = name
@@ -72,7 +74,7 @@ class Recipe:
     def insert(self):
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
- 
+
 
 class Ingredient:
     def __init__(self, name, alias, created, price_estimate, price_history):
@@ -81,12 +83,3 @@ class Ingredient:
         self.created = created
         self.price_estimate = price_estimate
         self.price_history = price_history
-
-# Returns a list of each username in the database
-def get_usernames():
-    return list(map(str, mongo.db.users.distinct('_id')))
-
-
-# Returns the count of users
-def user_count():
-    return mongo.db.users.count_documents({})
