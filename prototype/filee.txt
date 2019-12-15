@@ -1,0 +1,384 @@
+bolle,1
+sandwich mayoanaise,1
+bla. salat,1
+stegt ribbenssteg,1
+agurkesalat,1
+rødkål,1
+lammebov,7
+hvidkål,2
+vand,38
+salt,117
+peber,67
+brun farin,2
+laurbærblade,6
+allehånde, stødt,1
+nelliker, hele,1
+porre,4
+gulerødder,10
+timian, frisk,1
+korianderfrø,1
+peberkorn, sorte,1
+knoldselleri,1
+lammehals med ben,1
+peberkorn,6
+løg,41
+smør,11
+hvedemel,16
+kogevand,1
+piskefløde,3
+citronsaft,7
+asparges,1
+lammebov med ben,8
+flødeost med urter,1
+kartofler,10
+bouillon,10
+groftkværnet peber,20
+hvidløg,34
+citron,4
+tomater eller 1 dåse flåede tomater,1
+stilke merian eller 0.5 tsk. tørret,1
+olie,15
+grønne ærter. dybfrost,1
+dild, frisk,1
+ris,1
+marsala,4
+citronpeber,2
+margarine,14
+fetaost,4
+tørret mynte,2
+dijonsennep,5
+fintsmuldret franskbrødskrummer,1
+majroer,2
+salt og peber,6
+brune linser,1
+bacon,2
+timian,8
+frisk timian eller 1 tsk. tørret,1
+syrlige æbler,1
+lammebov, udbenet,1
+salvie,1
+merian,5
+hakket lamme eller fårefars,2
+gule sennepskorn,1
+hakket persille,15
+æg,23
+sort peber,7
+persille,10
+stegesky,1
+kulør,1
+udbenet lammebov,3
+laurbærblad,4
+majsstivelse,11
+fløde,10
+hakkede hvidløg,1
+safrantråde,1
+stødt ingefær,2
+paprika,6
+friskkværnet sort peber,1
+tsk. smuttede hele mandler,1
+kanelstænger,1
+rosiner,2
+stødt kanel,1
+olivenolie,13
+revet løg,2
+tomatjuice,1
+flåede tomater,5
+skrabede kartofler,1
+vand til det dækker,1
+tørret merian,2
+tyk skive afskorpet franskbrød,1
+fårefars,23
+groftrevet løg,1
+knust hvidløg,1
+æggehvide eller helt æg,1
+kogt røget skinke,1
+skalotteløg,2
+basilikum,3
+rosmarin,11
+presset hvidløg,14
+husblaspulver eller 2 blade husblas,1
+stilke timian,1
+kvist timian,1
+kvist mynte,1
+karry,2
+mild paprika,1
+groft kokosmel,1
+langkornet ris,1
+porrer,1
+fransk visk,2
+frikassesovs,1
+siet lammesuppe,2
+smørbolle,1
+frosne ærter,2
+tør vermouth,1
+franskbrød,1
+bouillon eller vand,1
+tørret mynte eller 1 spsk. friskhakket,1
+rosmarin eller 1 tsk. friskhakket,1
+finthakket løg,3
+lammebov uden ben,2
+kvist rosmarin,1
+tomater,6
+rød peberfrugt,3
+grøn peberfrugt,1
+courgetter,3
+olie til stegning,3
+drys rosmarin,1
+finthakket hvidløg,1
+lammebouillon,3
+basmati eller parboiled ris,1
+grøntsagsbouillon,1
+usvovlede halverede abrikoser,1
+ristede mandelflager,1
+lammebryst,9
+små løg,1
+honning,1
+soya,2
+stødt sort peber.,1
+hakkede krydderurter, f.eks. purløg og citronmelisse eller koriander,1
+lammebryst med ribben,1
+hakket skalotteløg,1
+små fed hvidløg, knust,1
+finthakket rosmarin,1
+friske brødkrummer,1
+smeltet smør,1
+brøndkarse til pynt,1
+groftkærnet peber,1
+icebergsalat,1
+æggeblomme,2
+citron saft heraf,3
+revet citronskal,1
+groft salt,5
+pasta,1
+røde peberfrugter,1
+agurk,2
+salathoved,1
+vineddike,3
+groft peber,1
+hvidløgssalt,1
+margarine til stegning,4
+hakket løg,4
+hvidvin,10
+champignoner,2
+tomatpure,3
+udbenet lammebryst,1
+hvidvin eller bouillon,1
+fyld,1
+røget flæsk,1
+hvidt brød,1
+frossen hel spinat,1
+hakket valnødder,1
+reven parmesanost,1
+nymalet sort peber,1
+fint hakket løg,1
+peberfrugt,1
+sennepspulver,1
+lidt  tabasco,1
+løg med 2 nelliker,1
+dildkviste,1
+fingerklippet dild,1
+smør eller margarine,1
+æggeblommer til legering,1
+stribet flæsk,1
+allehånde,2
+stødt nellike,1
+skive toastbrød, uden skorpe og udblødt i 2 spsk. vand,1
+g. hakket løg, svitset klar,1
+tørret oregano,1
+fetaost i terninger,1
+smør og olie,1
+fintsmuldret franskbrødskrumme,1
+rasp,9
+koriander,3
+hakket frisk oregano,1
+cayennepeber,1
+sorte oliven,2
+reven citronskal,3
+finthakket persille,1
+skiver brød, vendt i vand og vredet og tørret,1
+spsk. hvedemel krydret med salt og peber,1
+modne tomater, hakkede,1
+suppevand,1
+løg finthakket,2
+stilke blegselleri,1
+groftkværnet selleri,1
+mild chilisauce,1
+mælk,3
+broccoli,1
+kinesisk soya,2
+lyse rosiner,1
+smuldret franskbrødskrummer,1
+stærk karry,1
+enebær,4
+husblaspulver eller 2 blade,1
+lammekød, hakket,4
+aubergine,3
+hakkede tomater, konserves,2
+oregano, tørret,3
+rosmarin, tørret,1
+yoghurt naturel,3
+revet ost, mozzarella 45+,2
+grøn peber,3
+ymer,1
+reven granaost,1
+oksekød, hakket ca. 10% fedt,1
+bacon i skiver,1
+maizena majsstivelse,1
+ribsgele,1
+tomatpure. koncentreret,3
+squash eller agurk,1
+tørret merian eller 1 spsk. frisk,1
+hvedebrød eller flute,1
+kogte kolde kartofler,1
+friskklippet persille,1
+fintklippet kørvel,1
+finthakket esdragon,1
+aubergine i tern,1
+skært oksekød i tern,1
+olivenolie til bruning,1
+hakket hvidløg,4
+spidskommen,2
+lille stang kanel,1
+rødvin,7
+hakkede tomater,2
+økologisk citron,1
+oksebouillon,2
+perleløg,1
+sukker,4
+frisk mynte,1
+grahamsmel,1
+bagepulver,1
+smeltet margarine,1
+citron, reven skal heraf,1
+æg til pensling,1
+vakuumpakkede vinblade,1
+majsmel,1
+chilipebre,1
+nellike,1
+kanel,2
+mørk chokolade,1
+reven ost,1
+koldt vand,1
+hakket lammefars,1
+fed yoghurt,1
+tyrkisk yoghurt med 10% fedt,1
+spidskommen  groft knust,1
+stødt koriander,1
+salat.,1
+frisk finthakket mynte,1
+bulgur,1
+hakket frisk mynte,1
+citron, saften heraf,1
+forårsløg,1
+tomat til pynt,1
+romainsalat,1
+små finthakkede løg,1
+mælk, fløde eller cremefraiche 18%,1
+hvedemel eller rasp,1
+stødt sød chili,1
+smuttede hakkede mandler,1
+champignon,5
+fintsnittede porrer,1
+ds. flåede tomater,1
+paprika og chili efter smag,1
+løse ris, parboiled,1
+magert svinefars,1
+lammefars,1
+sødmælk,2
+persille, frisk hakket,1
+agurk i små tern,1
+skummetmælk,1
+kinakål,1
+persille, frisk,2
+peber. hvid,1
+muskat,1
+gulerod,3
+lammehals i skiver,1
+lammehals,4
+hele peberkorn,1
+meljævning,1
+fedtstof,1
+kvist løvstikke,1
+røde linser,1
+peberfrugter,1
+grillkul,1
+grillbriketter,1
+grilltændvæske,1
+kraftig aluminiumsfolie,1
+tynd kobbertråd,1
+chilipeber,1
+håndfuld friske timianblade eller 2 spsk. tørret,1
+porter,1
+lammekølle,3
+lammekølle uden ben.,1
+marinade.,1
+oregano,2
+lidt frisk kværnet peber,1
+lammesteak,1
+olie til pensling,2
+umodne ferskner i halve og uden sten,1
+rucola,1
+bagekartofler,1
+sat,1
+udbenet lammekølle,1
+pastinak,1
+selleri, skivet,1
+lammekølle uden ben,1
+gul peberfrugt,1
+hakket mynte,1
+smeltet smør til pensling,1
+lammekølle med ben,10
+hvidløgs marinade,1
+sojasauce,3
+friskreven ingefær,2
+esdragon,2
+lammeschnitzler ca 600 g.,1
+dild,1
+citronmelisse,1
+grønsagsbouillon,1
+creme fraiche,3
+lammeschnitzler ca. 600 g.,1
+grønne peberfrugter,1
+små tomater,1
+grofthakket persille,1
+franskbrødskrumme,1
+parmasanost,1
+lammekølle u nøgleben,2
+st. nelliker,1
+appelsiner,2
+flydende honning,1
+sky,1
+ingefær,1
+kryddereddike,1
+ansjosfileter eller sardinfileter,1
+siet marinade,1
+blåskimmelost,1
+frisk spinat,1
+frisk timian,1
+en god nævefuld salt,1
+lidt vand,1
+rosmarin, frisk,1
+timian, tørret,1
+rucola, salat,1
+cherrytomater,1
+oliven. sorte. uden sten. i saltlage,1
+feta. 50+,1
+rødvinseddike,1
+kvist frisk esdragon eller 1 tsk. tørret,1
+reven skal og saft af 1 citron,1
+smuttede mandler,1
+sorte oliven uden sten,1
+færdig marineret lammekølle,1
+små kartofler,1
+icebergsalat, strimlet,1
+hakket ananas fra dåse,1
+radiser, i kvarte,1
+agurk i skiver,1
+klippet purløg,1
+lidt ananas saft,1
+rørsukker,1
+majsstivelse til jævning,1
+lammeryg,1
+dobbelte lammekoteletter,1
+dobbelt lammeryg,1
+skiver bacon,1
