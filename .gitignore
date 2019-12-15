@@ -1,2 +1,3 @@
 prototype/.idea/
 prototype/venv/
+*.pyc

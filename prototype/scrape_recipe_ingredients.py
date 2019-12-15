@@ -2,6 +2,10 @@ from bs4 import BeautifulSoup
 import urllib.request
 
 
+def clean_soup(mess):
+    return mess.get_text().strip().lower()
+
+
 def get_recipe_ingredients(recipe_id, persons=4):
     # recipe_base_url = 'https://www.dk-kogebogen.dk/opskrifter/'
     ingredient_base_url = 'https://www.dk-kogebogen.dk/opskrifter/udskrift/indkoebsliste.php?id=%s&personer=%s'
@@ -11,22 +15,21 @@ def get_recipe_ingredients(recipe_id, persons=4):
 
     table = soup.find('table', {'cellpadding': 3})
     rows = table.findAll('tr')
+
+    ingredients = []
+
     for row in rows:
         amount, unit, ingredient = row.findAll('td')
-        ingredient_text = ingredient.get_text().strip()
-        if '\t' in ingredient_text:
-            index = ingredient_text.index('\t')
-            print('Ingredient:')
-            print(ingredient_text[0:index])
-            if len(amount.get_text()) > 0:
-                print('Amount:')
-                print(amount.get_text())
-            if len(unit.get_text()) > 0:
-                print('Unit:')
-                print(unit.get_text())
-            print('')
+        for span in ingredient.findAll('span'):
+            span.extract()
 
-    return soup
+        # ingredients.append({'amount': amount.get_text(), 'unit': unit.get_text(), 'ingredient': ingredient.get_text()})
+        a_t, u_t, i_t = clean_soup(amount), clean_soup(unit), clean_soup(ingredient)
+
+        if len(a_t) + len(u_t) + len(i_t) > 0:
+            ingredients.append([a_t, u_t, i_t])
+
+    return ingredients
 
 
-#get_recipe_ingredients(33005, 4)
+print(get_recipe_ingredients(33005, 4))
