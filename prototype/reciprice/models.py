@@ -8,25 +8,21 @@ class User:
         self._id = username
         self.created = created
 
-    # Returns the dictionary key that identifies this user
-    def get_id(self):
-        return {'_id': self._id}
-
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
     def replace(self):
-        mongo.db.users.replace_one(self.get_id(), self.__dict__, upsert=True)
+        mongo.db.users.replace_one(self._id, self.__dict__, upsert=True)
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self.get_id(), {'_id': username})
+            mongo.db.users.update_one(self._id, {'_id': username})
         self._id = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self.get_id(), {'created': created})
+            mongo.db.users.update_one(self._id, {'created': created})
         self.created = created
 
     def __repr__(self):
@@ -35,13 +31,13 @@ class User:
 
 # Returns a user object with data populated from the database
 def load_user(username):
-    user = mongo.db.users.find_one({'_id': username})
+    user = mongo.db.users.find_one(username)
     return User(user['_id'], user['created'])
 
 
 # Returns a user object or cause 404 error
 def load_user_or_404(username):
-    user = mongo.db.users.find_one_or_404({'_id': username})
+    user = mongo.db.users.find_one_or_404(username)
     return User(user['_id'], user['created'])
 
 
