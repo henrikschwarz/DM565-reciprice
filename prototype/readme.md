@@ -1,3 +1,13 @@
+###Run Instructions:
+##First time:
+Initialize virtual environment
+Activate virtual environment
+Install requirements.txt on virtual environment
+Run `python setup-env.py` and input mongodb login
+##Every time:
+Run flask with `flask run` or `python run.py`
+
+
 ### Data Storage
 ## Ingredient
 Each ingredient should have history of prices we have observed
