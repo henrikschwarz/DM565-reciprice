@@ -30,7 +30,7 @@ class User:
         self.created = created
 
     def __repr__(self):
-        return 'User(%s, %s)' % (self.username, self.created)
+        return 'User(%s, %s)' % (self._id, self.created)
 
 
 # Returns a user object with data populated from the database
