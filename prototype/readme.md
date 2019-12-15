@@ -1,10 +1,10 @@
-###Run Instructions:
-##First time:
+### Run Instructions
+## First time:
 Initialize virtual environment
 Activate virtual environment
 Install requirements.txt on virtual environment
 Run `python setup-env.py` and input mongodb login
-##Every time:
+## Every time:
 Run flask with `flask run` or `python run.py`
 
 
