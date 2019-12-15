@@ -75,11 +75,10 @@ class Recipe:
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
 
+
 def get_recipe(name):
     re = mongo.db.recipes.find_one_or_404(name)
     return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
-    
- 
 
 class Ingredient:
     def __init__(self, name, alias, created, price_estimate, price_history):
@@ -92,14 +91,3 @@ class Ingredient:
     def insert(self):
         ingredients = mongo.db.ingredient
         ingredients.insert(self.__dict__)
-        
-
-
-# Returns a list of each username in the database
-def get_usernames():
-    return list(map(str, mongo.db.users.distinct('_id')))
-
-
-# Returns the count of users
-def user_count():
-    return mongo.db.users.count_documents({})
