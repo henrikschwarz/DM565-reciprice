@@ -43,23 +43,27 @@ def get_ingredients(soup):
             ingredients.append([a_t, u_t, i_t])
     return ingredients
 
-rege = re.compile('.*(\(|-|/|:).*', re.IGNORECASE)
-all_ingredients = []
-for i in range(10):
-    soup = load_soup(0+i,4)
-    ingredient_list = get_ingredients(soup)
-    for l in ingredient_list:
-        ingredient = l[2]
-        if rege.search(l[2]) == None:
-            all_ingredients.append(l[2] )
-dist = {rr:all_ingredients.count(rr) for rr in all_ingredients}
+def get_ingredient_ranking(recipe_id=0, no_recipes=10):
+    rege = re.compile('.*(\(|-|/|:).*', re.IGNORECASE)
+    all_ingredients = []
+    for i in range(no_recipes):
+        soup = load_soup(recipe_id+i)
+        ingredient_list = get_ingredients(soup)
+        for l in ingredient_list:
+            ingredient = l[2]
+            if rege.search(l[2]) == None:
+                all_ingredients.append(l[2] )
 
-dd = dist.keys()
-ss = []
-for key in dd:
-    ss.append([key,dist[key]])
+    check_list = []
+    ss = []
+    for item in all_ingredients:
+        if item not in check_list: 
+            ss.append([item, all_ingredients.count(item)])
+            check_list.append(item)
 
-ss.sort(key = lambda x:x[1])
-ss.reverse()
-for i in ss:
-    print(i)
+    ss.sort(key = lambda x:x[1])
+    ss.reverse()
+    for i in ss:
+        print(i)
+
+get_ingredient_ranking()
