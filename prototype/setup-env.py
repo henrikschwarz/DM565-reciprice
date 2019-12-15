@@ -1,7 +1,6 @@
 MONGO_URI = 'mongodb://%s:%s@pratgen.dk:27017/innovation?authSource=innovation'
 
-print('Please enter your mongodb credentials.')
-print('Username:')
+print('Please enter your mongodb credentials.\nUsername:')
 username = input()
 print('\nPassword')
 password = input()
