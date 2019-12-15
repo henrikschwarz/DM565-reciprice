@@ -10,7 +10,9 @@ main = Blueprint("main", __name__)
 @main.route('/')
 def index():
     users = mongo.db.users
-    return '<h1>Users in the system: %s</h1>' % str(users.count_documents({}))
+    mongo.db.users.find_one_and_delete({'_id': {'$type': 'objectId'}})
+    return '<h1>Users in the system: %s<br>Usernames: %s</h1>' % (
+        str(users.count_documents({})), ', '.join(map(str, users.distinct('_id'))))
 
 
 @main.route("/user/<username>")
