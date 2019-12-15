@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 
 from .extentions import mongo
 
-from .models import Recipe
+from . import models
 from datetime import datetime, timezone
 
 main = Blueprint("main", __name__)
@@ -10,17 +10,14 @@ main = Blueprint("main", __name__)
 
 @main.route('/')
 def index():
-    users = mongo.db.users
-    mongo.db.users.find_one_and_delete({'_id': {'$type': 'objectId'}})
     return '<h1>Users in the system: %s<br>Usernames: %s</h1>' % (
-        str(users.count_documents({})), ', '.join(map(str, users.distinct('_id'))))
+        str(models.user_count()), ', '.join(models.get_usernames()))
 
 
 @main.route("/user/<username>")
 def user_profile(username):
-    users = mongo.db.users
-    user = users.find_one_or_404({"_id": username})
-    return '<h1>%s</h1>' % str(user)
+    user = models.load_user_or_404(username)
+    return '<h1>%s</h1>' % user
 
 
 @main.route("/usercreate/<username>")
@@ -31,6 +28,6 @@ def user_create(username):
 
 @main.route("/recipecreate/<name>")
 def recipecreate_create(name):
-    re = Recipe(name, 'prode', ['fdd','fdds'], 'dk-kogebogen.dk', datetime.utcnow())
+    re = models.Recipe(name, 'prode', ['fdd','fdds'], 'dk-kogebogen.dk', datetime.utcnow())
     re.insert()
     return '<h1>Created %s!</h1>' % 'lol' 

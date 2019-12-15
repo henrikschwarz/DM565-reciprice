@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 
 from .extentions import mongo
 
-
 class User:
     def __init__(self, username, created):
         self._id = username
@@ -19,27 +18,39 @@ class User:
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
     def replace(self):
-        users = mongo.db.users
-        users.replace_one(self.get_id(), self.get_dict(), upsert=True)
+        mongo.db.users.replace_one(self.get_id(), self.get_dict(), upsert=True)
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
         users = mongo.db.users
         if update_db:
-            users.update_one(self.get_id(), {'_id': username})
+            mongo.db.users.update_one(self.get_id(), {'_id': username})
         self.username = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
         users = mongo.db.users
         if update_db:
-            users.update_one(self.get_id(), {'created': created})
+            mongo.db.users.update_one(self.get_id(), {'created': created})
         self.created = created
 
 # Returns a user object with data populated from the database
 def load_user(username):
     users = mongo.db.users
     user = users.find_one({'_id': username})
+    def __repr__(self):
+        return 'User(%s, %s)' % (self.username, self.created)
+
+
+# Returns a user object with data populated from the database
+def load_user(username):
+    user = mongo.db.users.find_one({'_id': username})
+    return User(user['_id'], user['created'])
+
+
+# Returns a user object or cause 404 error
+def load_user_or_404(username):
+    user = mongo.db.users.find_one_or_404({'_id': username})
     return User(user['_id'], user['created'])
 
 
@@ -71,3 +82,11 @@ class Ingredient:
         self.price_estimate = price_estimate
         self.price_history = price_history
 
+# Returns a list of each username in the database
+def get_usernames():
+    return list(map(str, mongo.db.users.distinct('_id')))
+
+
+# Returns the count of users
+def user_count():
+    return mongo.db.users.count_documents({})
