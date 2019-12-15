@@ -34,4 +34,4 @@ def recipecreate_create(name):
 
 @main.route("/recipeget/<name>")
 def recipe_get(name):
-    return '<h1>found %s!</h1>' % models.get_recipe(name)["_id"]
+    return '<h1>found %s!</h1>' % models.get_recipe(name)._id
