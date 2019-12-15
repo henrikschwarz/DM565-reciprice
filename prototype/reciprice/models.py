@@ -75,7 +75,6 @@ class Recipe:
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
 
-
 def get_recipe(name):
     re = mongo.db.recipes.find_one_or_404(name)
     return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
@@ -90,8 +89,10 @@ class Ingredient:
 
     def insert(self):
         ingredients = mongo.db.ingredient
-        ingredients.insert(self.__dict__)
+        return ingredients.insert(self.__dict__)
+        
 
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404(name)
+    print(ingredient)
     return Ingredient(name=ingredient['_id'], alias=ingredient['alias'], created=ingredient['created'], price_estimate=ingredient['price_estimate'], price_history=ingredient['price_history'])
