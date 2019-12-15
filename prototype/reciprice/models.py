@@ -76,8 +76,8 @@ class Recipe:
         recipes.insert(self.__dict__)
 
 def get_recipe(name):
-    recipes = mongo.db.recipes
-    return recipes.find_one_or_404(name)
+    re = mongo.db.recipes.find_one_or_404(name)
+    return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
     
  
 
