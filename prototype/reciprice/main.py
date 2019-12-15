@@ -31,3 +31,7 @@ def recipecreate_create(name):
     re = models.Recipe(name, 'prode', ['fdd','fdds'], 'dk-kogebogen.dk', datetime.utcnow())
     re.insert()
     return '<h1>Created %s!</h1>' % 'lol' 
+
+@main.route("/recipeget/<name>")
+def recipe_get(name):
+    return '<h1>found %s!</h1>' % models.get_recipe(name)["_id"]
