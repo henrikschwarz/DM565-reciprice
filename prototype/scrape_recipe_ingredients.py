@@ -108,9 +108,9 @@ in_list = []
 
 for item in insert_list:
     if item not in remove_dict:
-        in_list.append({'_id': item, 'amount':insert_list.count(item)})
+        in_list.append({'name': item, 'amount':insert_list.count(item)})
         remove_dict.update({item: 'True'})
-        
+
 db = client.innovation
 collection = db.ingredient
 collection.insert_many(in_list)
