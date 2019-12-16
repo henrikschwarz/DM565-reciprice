@@ -5,7 +5,7 @@ from .extentions import mongo
 
 class User:
     def __init__(self, username, created):
-        self._id = username
+        self.username = username
         self.created = created
 
     # Returns the dictionary key that identifies this user
@@ -65,7 +65,7 @@ def user_count():
 
 class Recipe:
     def __init__(self, name, procedure, ingredient_list, source, created):
-        self._id = name
+        self.name = name
         self.procedure = procedure
         self.ingredient_list = ingredient_list
         self.source = source
@@ -81,7 +81,7 @@ def get_recipe(name):
 
 class Ingredient:
     def __init__(self, name, product_list):
-        self._id = name
+        self.name = name
         self.product_list = product_list
 
     def insert(self):
@@ -95,8 +95,8 @@ def get_ingredient(name):
     return Ingredient(name=ingredient['_id'], alias=ingredient['alias'], created=ingredient['created'], price_estimate=ingredient['price_estimate'], price_history=ingredient['price_history'])
 
 class Product:
-    def __init__(self, ean, name, amount=None, unit=None, price, price_history):
-        self._id = ean
+    def __init__(self, ean, name, amount, unit, price, price_history):
+        self.ean = ean
         self.name = name
         self.amount = amount
         self.unit = unit

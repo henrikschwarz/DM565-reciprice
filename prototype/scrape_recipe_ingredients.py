@@ -6,8 +6,8 @@ import multiprocessing
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from concurrent.futures import Future
 from pymongo import MongoClient
+from mongoenv import MONGO_URI
 
-MONGO_URI = 'mongodb://peteradmin:Pepsi1609@pratgen.dk/innovation?authSource=admin'
 client = MongoClient(MONGO_URI)
 
 rege = re.compile('.*(\(|-|/|:|\.).*')
@@ -102,7 +102,7 @@ def make_ranking(lis):
 
     return flat_list 
 #39027
-insert_list = make_ranking(execute_get_in_parallel(0,39027,get_ingredients))
+insert_list = make_ranking(execute_get_in_parallel(0,10,get_ingredients))
 remove_dict = {}
 in_list = []
 
