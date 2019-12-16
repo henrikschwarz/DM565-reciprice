@@ -2,10 +2,16 @@ from bs4 import BeautifulSoup
 import time
 import re
 import urllib.request
+import multiprocessing
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from concurrent.futures import Future
+from pymongo import MongoClient
 
-rege = re.compile('.*(\(|-|/|:).*')
+MONGO_URI = 'mongodb://peteradmin:Pepsi1609@pratgen.dk/innovation?authSource=admin'
+client = MongoClient(MONGO_URI)
+
+rege = re.compile('.*(\(|-|/|:|\.).*')
+
 
 def clean_soup(mess):
     return mess.get_text().strip().lower()
@@ -80,13 +86,11 @@ def execute_get_in_parallel(recipe_id, no_recipes, function):
     urls = create_urls(recipe_id,no_recipes)
 
     results = []
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        start = time.time()
+    thread_count = multiprocessing.cpu_count()
+    with ThreadPoolExecutor(max_workers=thread_count) as executor:
         futures = [ executor.submit(function, url) for url in urls]
         for result in as_completed(futures):
             results.append(result.result())
-        end = time.time()
-        print("Time Taken: {:.6f}s".format(end-start))
 
     return results
 
@@ -96,8 +100,17 @@ def make_ranking(lis):
         for y in x:
             flat_list.append(y)
 
-    return {item:flat_list.count(item) for item in flat_list}
+    return flat_list 
+#39027
+insert_list = make_ranking(execute_get_in_parallel(0,39027,get_ingredients))
+remove_dict = {}
+in_list = []
 
-print(execute_get_in_parallel(0,100,get_recipe))
-
-
+for item in insert_list:
+    if item not in remove_dict:
+        in_list.append({'_id': item, 'amount':insert_list.count(item)})
+        remove_dict.update({item: 'True'})
+        
+db = client.innovation
+collection = db.ingredient
+collection.insert_many(in_list)
