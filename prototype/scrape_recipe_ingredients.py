@@ -27,7 +27,7 @@ def get_recipe(soup):
     return recipe
 
 """
-gets all ingredients of a recipe
+gets all ingredients of a recipe including amounts and units
 """
 def get_all_ingredients(url):
     html = urllib.request.urlopen(url).read()
@@ -46,7 +46,7 @@ def get_all_ingredients(url):
     return ingredients
 
 """
-returns the ingredients of one recipe at url 
+returns the ingredients of one recipe at url, this does not include amounts and units
 returns a list of ingredients
 """
 def get_ingredients(url):
