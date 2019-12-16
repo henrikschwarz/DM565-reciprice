@@ -18,8 +18,12 @@ def create_urls(recipe_id, no_recipes):
 
     return urls
 
-
-def get_recipe(soup):
+"""
+get receipe at url
+"""
+def get_recipe(url):
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html, 'html.parser')
     recipetable = soup.findAll('td', {'width': 300})[4]  # find the table containing the recipe
     for head in recipetable.findAll('table'):
         head.extract()
@@ -94,6 +98,6 @@ def make_ranking(lis):
 
     return {item:flat_list.count(item) for item in flat_list}
 
-print(execute_get_in_parallel(0,100,get_all_ingredients))
+print(execute_get_in_parallel(0,100,get_recipe))
 
 
