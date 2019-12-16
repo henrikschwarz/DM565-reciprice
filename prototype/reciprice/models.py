@@ -91,8 +91,7 @@ class Ingredient:
 
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404(name)
-    print(ingredient)
-    return Ingredient(name=ingredient['_id'], alias=ingredient['alias'], created=ingredient['created'], price_estimate=ingredient['price_estimate'], price_history=ingredient['price_history'])
+    return Ingredient(name=ingredient['_id'], product_list=['product_list'])
 
 class Product:
     def __init__(self, ean, name, amount, unit, price, price_history):
