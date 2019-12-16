@@ -1,24 +1,22 @@
 from bs4 import BeautifulSoup
+import time
 import re
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor,as_completed
+from concurrent.futures import Future
 
+rege = re.compile('.*(\(|-|/|:).*')
 
 def clean_soup(mess):
     return mess.get_text().strip().lower()
 
-
-def load_soup(recipe_id, persons=None):
-    # recipe_base_url = 'https://www.dk-kogebogen.dk/opskrifter/'
+def create_urls(recipe_id, no_recipes):
     ingredient_base_url = 'https://www.dk-kogebogen.dk/opskrifter/udskrift/u-kommentar-u-beregn-u-billede.php?id=%s'
-    if persons is not None:
-        ingredient_base_url += '&personer=%s'
-        url = ingredient_base_url % (recipe_id, persons)
-    else:
-        url = ingredient_base_url % recipe_id
-    html = urllib.request.urlopen(url).read()
-    soup = BeautifulSoup(html, 'html.parser')
+    urls = [] 
+    for i in range(no_recipes):
+        urls.append(ingredient_base_url % str(int(recipe_id)+i))
 
-    return soup
+    return urls
 
 
 def get_recipe(soup):
@@ -28,8 +26,12 @@ def get_recipe(soup):
     recipe = clean_soup(recipetable)
     return recipe
 
-
-def get_ingredients(soup):
+"""
+gets all ingredients of a recipe
+"""
+def get_all_ingredients(url):
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html, 'html.parser')
     table = soup.find('table', {'cellpadding': 3})  # find the table containing ingredients
     rows = table.findAll('tr')
     ingredients = []
@@ -43,24 +45,55 @@ def get_ingredients(soup):
             ingredients.append([a_t, u_t, i_t])
     return ingredients
 
-def get_ingredient_ranking(recipe_id=0, no_recipes=10):
-    rege = re.compile('.*(\(|-|/|:).*')
-    all_ingredients = []
-    for i in range(no_recipes):
-        soup = load_soup(recipe_id+i)
-        ingredient_list = get_ingredients(soup)
-        for l in ingredient_list:
-            if rege.search(l[2]) == None:
-                all_ingredients.append(l[2] )
+"""
+returns the ingredients of one recipe at url 
+returns a list of ingredients
+"""
+def get_ingredients(url):
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html, 'html.parser')
 
-    check_list = []
-    ingredient_count = []
-    for item in all_ingredients:
-        if item not in check_list: 
-            ingredient_count.append([item, all_ingredients.count(item)])
-            check_list.append(item)
+    table = soup.find('table', {'cellpadding': 3})  # find the table containing ingredients
+    rows = table.findAll('tr')
+    ingredients = []
+    for row in rows:
+        ingredient = row.findAll('td')[2] #the datafield containing the ingredients is the third field
+        for span in ingredient.findAll('span'):
+            span.extract()
+        i_t = clean_soup(ingredient)
 
-    ingredient_count.sort(key = lambda x:x[1])
-    ingredient_count.reverse()
-    return ingredient_count
+        if len(i_t) > 0:
+            if rege.search(i_t) == None:
+                ingredients.append(i_t)
+            
+    return ingredients
+
+"""
+take a recipe_id, the number of recipes, and a the name of a function to execute on the urls created
+returns a list of results provided by the function given
+"""
+def execute_get_in_parallel(recipe_id, no_recipes, function):
+    urls = create_urls(recipe_id,no_recipes)
+
+    results = []
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        start = time.time()
+        futures = [ executor.submit(function, url) for url in urls]
+        for result in as_completed(futures):
+            results.append(result.result())
+        end = time.time()
+        print("Time Taken: {:.6f}s".format(end-start))
+
+    return results
+
+def make_ranking(lis):
+    flat_list = []
+    for x in lis:
+        for y in x:
+            flat_list.append(y)
+
+    return {item:flat_list.count(item) for item in flat_list}
+
+print(execute_get_in_parallel(0,100,get_all_ingredients))
+
 
