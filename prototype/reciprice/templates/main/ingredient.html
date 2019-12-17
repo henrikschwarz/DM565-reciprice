@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+
+{% block title %} {{ ingredient.name }} {% endblock %}
+
+{% block content %}
+    <h3>{{ ingredient.name }}</h3>
+    <ul>
+        {% if ingredient.alias %}
+        <li>Aliases
+            <ul>
+                {% for item in ingredient.alias %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% else %}
+            <li>There are no aliases</li>
+        {% endif %}
+    </ul>
+
+{% endblock %}

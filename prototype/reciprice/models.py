@@ -78,9 +78,10 @@ class Recipe:
 
 
 def get_recipe(name):
-    re = mongo.db.recipes.find_one_or_404(name)
-    return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'],
-                  created=re['created'])
+    recipe = mongo.db.recipes.find_one_or_404(name)
+    return Recipe(name=recipe['_id'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'],
+                  source=recipe['source'],
+                  created=recipe['created'])
 
 
 """
@@ -91,8 +92,8 @@ The Ingredient class holds the name of the ingredient, a list of product identif
 class Ingredient:
     def __init__(self, name, product_list, alias=[]):
         self.name = name
-        self.alias = alias
-        self.product_list = product_list
+        self.alias = alias  # different names that are the same ingredient
+        self.product_list = product_list  # link the products we have scraped from bilkas website
 
     def insert(self):
         ingredients = mongo.db.ingredients
@@ -102,7 +103,6 @@ class Ingredient:
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({'name': name})
     return Ingredient(name=ingredient['name'], alias=['alias'], product_list=['product_list'])
-
 
 class Product:
     def __init__(self, name, amount, unit, price, price_history, ean=0):

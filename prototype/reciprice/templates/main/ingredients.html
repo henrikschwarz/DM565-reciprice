@@ -1,0 +1,40 @@
+{% extends "main/base.html" %}
+
+{% block title %} Ingredients {% endblock %}
+
+{% block content %}
+<h3>Ingredients</h3>
+    <div class="col-md-12">
+        <div class="form-group float-right">
+            <label for="">Search:</label>
+            <input type="text" name="ingredients-name">
+        </div>
+    </div>
+    <div class="clearfix"></div>
+<ul class="list-group">
+    {% for item in ingredients %}
+        <li class="list-group-item">
+            <a href="{{ url_for('main.get_ingredient', name=item.name) }}">
+                {{ item.name.capitalize() }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: "/",
+                type: "GET",
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+{% endblock %}
