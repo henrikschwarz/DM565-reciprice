@@ -27,14 +27,14 @@ def user_profile(username):
 
 
 @main.route("/user/<username>/create")
-def user_create(username):
+def create_user(username):
     users = mongo.db.users
     users.insert({'_id': username, 'created': datetime.now(timezone.utc)})
     return '<h1>Created %s!</h1>' % str(username)
 
 
 @main.route("/recipe/<name>/create")
-def recipecreate_create(name):
+def create_recipe(name):
     re = models.Recipe(name, 'prode', ['fdd', 'fdds'], 'dk-kogebogen.dk', datetime.utcnow())
     re.insert()
     return '<h1>Created %s!</h1>' % 'lol'
@@ -51,18 +51,29 @@ def list_recipes():
     return render_template("main/recipes.html", recipes=recipes)
 
 
+@main.route("/ingredients_json/")
+def ingredients_json():
+    ingredients = mongo.db.ingredients.find({"name": {"$in": ["h"]}})
+    dict_ingredient = dict()
+    for item in ingredients:
+        dict_ingredient[item["name"]] = item
+
+    return dict_ingredient
+
+
 @main.route("/ingredients/")
 def list_ingredients():
     ingredients = mongo.db.ingredients.find()
     return render_template('main/ingredients.html', ingredients=ingredients)
 
 
-@main.route("/ingredient/<name>/create")
-def ingredient_create(name):
+@main.route("/ingredients/<name>/create")
+def create_ingredient(name):
     ing = models.Ingredient(name, [], [])
     return '<h1>found %s!</h1>' % ing.insert()
 
 
-@main.route("/ingredientget/<name>")
-def ingredient_get(name):
-    return '<h1>found %s!</h1>' % models.get_ingredient(name).name
+@main.route("/ingredients/<name>")
+def get_ingredient(name):
+    ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
+    return render_template("main/ingredient.html", ingredient=ingredient)
