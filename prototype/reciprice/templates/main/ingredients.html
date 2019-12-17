@@ -1,0 +1,12 @@
+{% extends "main/base.html" %}
+
+{% block title %} Ingredients {% endblock %}
+
+{% block content %}
+<h3>Ingredients</h3>
+<ul class="list-group">
+    {% for item in ingredients %}
+        <li class="list-group-item"><a href="{{ url_for('main.ingredient_get', name=item.name) }}">{{ item.name }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

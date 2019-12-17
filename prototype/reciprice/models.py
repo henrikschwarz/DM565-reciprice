@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from .extentions import mongo
 
+
 class User:
     def __init__(self, username, created):
         self.username = username
@@ -20,7 +21,7 @@ class User:
     def set_username(self, username, update_db=True):
         if update_db:
             mongo.db.users.update_one(self.get_id(), {'_id': username})
-        self._id = username
+        self.username = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
@@ -74,30 +75,36 @@ class Recipe:
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
 
+
 def get_recipe(name):
-    re = mongo.db.recipes.find_one_or_404(name)
-    return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
+    recipe = mongo.db.recipes.find_one_or_404(name)
+    return Recipe(name=recipe['_id'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'], source=recipe['source'],
+                  created=recipe['created'])
+
 
 """
 The Ingredient class holds the name of the ingredient, a list of product identifiers, and if it has an alias.
 """
+
+
 class Ingredient:
     def __init__(self, name, product_list, alias=[]):
         self.name = name
-        self.alias = alias
-        self.product_list = product_list
+        self.alias = alias  # different names that are the same ingredient
+        self.product_list = product_list  # link the products we have scraped from bilkas website
 
     def insert(self):
         ingredients = mongo.db.ingredients
         return ingredients.insert(self.__dict__)
-        
+
 
 def get_ingredient(name):
-    ingredient = mongo.db.ingredients.find_one_or_404({'name' : name})
-    return Ingredient(name=ingredient['name'], alias=['alias'],product_list=['product_list'])
+    ingredient = mongo.db.ingredients.find_one_or_404({'name': name})
+    return Ingredient(name=ingredient['name'], alias=['alias'], product_list=['product_list'])
+
 
 class Product:
-    def __init__(self,  name, amount, unit, price, price_history,ean=0):
+    def __init__(self, name, amount, unit, price, price_history, ean=0):
         self.ean = ean
         self.name = name
         self.amount = amount

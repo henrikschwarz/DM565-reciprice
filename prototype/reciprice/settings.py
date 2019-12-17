@@ -1,3 +1,3 @@
 import os
 
-MONGO_URI = os.environ.get('MONGO_URI')
+MONGO_URI = "mongodb://henrik:henrikpass321@pratgen.dk:27017/innovation?authSource=innovation"

@@ -1,4 +1,13 @@
 {% extends "main/base.html" %}
+
+{% block title %} Index {% endblock %}
+
 {% block content %}
-trying
+    <h3>Users in the system:</h3>
+    <ul class="list-group">
+        {% for user in userlist %}
+            <li class="list-group-item">{{ user }}</li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}
