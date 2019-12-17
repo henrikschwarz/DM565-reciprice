@@ -2,3 +2,7 @@
     color: #FFF;
     font-weight: bold;
 }
+
+li.list-group-item:first-letter {
+    text-transform:capitalize;
+}
