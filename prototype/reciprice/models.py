@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from .extentions import mongo
 
+
 class User:
     def __init__(self, username, created):
         self.username = username
@@ -10,11 +11,13 @@ class User:
     # Returns the dictionary key that identifies this user
     def get_id(self):
         return self.username
+    def get_filter(self):
+        return {'username': self.username}
 
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
     def replace(self):
-        mongo.db.users.replace_one(self.get_id(), self.__dict__, upsert=True)
+        mongo.db.users.replace_one(self.get_filter(), self.__dict__, upsert=True)
 
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
@@ -25,23 +28,22 @@ class User:
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self.get_id(), {'created': created})
+            mongo.db.users.update_one(self.get_filter(), {'created': created})
         self.created = created
 
     def __repr__(self):
         return 'User(%s, %s)' % (self.username, self.created)
 
-
 # Returns a user object with data populated from the database
 def load_user(username):
-    user = mongo.db.users.find_one({'_id': username})
-    return User(user['_id'], user['created'])
+    user = mongo.db.users.find_one({'username': username})
+    return User(user['username'], user['created'])
 
 
 # Returns a user object or cause 404 error
 def load_user_or_404(username):
-    user = mongo.db.users.find_one_or_404({'_id': username})
-    return User(user['_id'], user['created'])
+    user = mongo.db.users.find_one_or_404({'username': username})
+    return User(user['username'], user['created'])
 
 
 # Creates a new user in the database and returns it as an object
@@ -54,7 +56,7 @@ def create_user(username):
 
 # Returns a list of each username in the database
 def get_usernames():
-    return list(map(str, mongo.db.users.distinct('_id')))
+    return list(map(str, mongo.db.users.distinct('username')))
 
 
 # Returns the count of users
@@ -74,13 +76,18 @@ class Recipe:
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
 
+
 def get_recipe(name):
     re = mongo.db.recipes.find_one_or_404(name)
-    return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
+    return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'],
+                  created=re['created'])
+
 
 """
 The Ingredient class holds the name of the ingredient, a list of product identifiers, and if it has an alias.
 """
+
+
 class Ingredient:
     def __init__(self, name, product_list, alias=[]):
         self.name = name
@@ -90,14 +97,15 @@ class Ingredient:
     def insert(self):
         ingredients = mongo.db.ingredients
         return ingredients.insert(self.__dict__)
-        
+
 
 def get_ingredient(name):
-    ingredient = mongo.db.ingredients.find_one_or_404({'name' : name})
-    return Ingredient(name=ingredient['name'], alias=['alias'],product_list=['product_list'])
+    ingredient = mongo.db.ingredients.find_one_or_404({'name': name})
+    return Ingredient(name=ingredient['name'], alias=['alias'], product_list=['product_list'])
+
 
 class Product:
-    def __init__(self,  name, amount, unit, price, price_history,ean=0):
+    def __init__(self, name, amount, unit, price, price_history, ean=0):
         self.ean = ean
         self.name = name
         self.amount = amount
