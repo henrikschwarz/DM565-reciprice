@@ -27,6 +27,7 @@ def create_urls(recipe_id, no_recipes):
 
 """
 get receipe at url
+gets all ingredients of a recipe including amounts and units
 """
 def get_recipe_url(url):
     html = urllib.request.urlopen(url).read()
@@ -35,14 +36,7 @@ def get_recipe_url(url):
     for head in recipetable.findAll('table'):
         head.extract()
     recipe = clean_soup(recipetable)
-    return recipe
 
-"""
-gets all ingredients of a recipe including amounts and units
-"""
-def get_all_ingredients(url):
-    html = urllib.request.urlopen(url).read()
-    soup = BeautifulSoup(html, 'html.parser')
     table = soup.find('table', {'cellpadding': 3})  # find the table containing ingredients
     rows = table.findAll('tr')
     ingredients = []
@@ -54,7 +48,9 @@ def get_all_ingredients(url):
 
         if len(a_t) + len(u_t) + len(i_t) > 0:
             ingredients.append([a_t, u_t, i_t])
-    return ingredients
+
+    return recipe
+
 
 """
 returns the ingredients of one recipe at url, this does not include amounts and units
