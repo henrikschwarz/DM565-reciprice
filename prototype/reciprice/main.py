@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-
+from bson.json_util import dumps
 from .extentions import mongo
 
 from . import models
@@ -67,6 +67,23 @@ def list_ingredients():
     return render_template('main/ingredients.html', ingredients=ingredients)
 
 
+@main.route("/json/ingredients/")
+def list_ingredients_json():
+    ingredient_dict = dict()
+    ingredients = mongo.db.ingredients.find()
+    ingredient_dict["ingredients"] = list(ingredients)
+    return dumps(ingredient_dict, ensure_ascii=False)
+
+
+@main.route("/json/ingredients/<name>")
+def list_specific_ingredient_json(name):
+    ingredient_dict = dict()
+    regex = r'%s' % name
+    ingredients = mongo.db.ingredients.find({"name": {"$regex": regex}})
+    ingredient_dict["ingredients"] = ingredients
+    return dumps(ingredient_dict, ensure_ascii=False)
+
+
 @main.route("/ingredients/<name>/create")
 def create_ingredient(name):
     ing = models.Ingredient(name, [], [])
@@ -77,4 +94,3 @@ def create_ingredient(name):
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
     return render_template("main/ingredient.html", ingredient=ingredient)
-
