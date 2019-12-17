@@ -35,14 +35,14 @@ class User:
 
 # Returns a user object with data populated from the database
 def load_user(username):
-    user = mongo.db.users.find_one({'_id': username})
-    return User(user['_id'], user['created'])
+    user = mongo.db.users.find_one({'username': username})
+    return User(user['username'], user['created'])
 
 
 # Returns a user object or cause 404 error
 def load_user_or_404(username):
-    user = mongo.db.users.find_one_or_404({'_id': username})
-    return User(user['_id'], user['created'])
+    user = mongo.db.users.find_one_or_404({'username': username})
+    return User(user['username'], user['created'])
 
 
 # Creates a new user in the database and returns it as an object
@@ -55,7 +55,7 @@ def create_user(username):
 
 # Returns a list of each username in the database
 def get_usernames():
-    return list(map(str, mongo.db.users.distinct('_id')))
+    return list(map(str, mongo.db.users.distinct('username')))
 
 
 # Returns the count of users
