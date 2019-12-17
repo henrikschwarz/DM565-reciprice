@@ -77,3 +77,4 @@ def create_ingredient(name):
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
     return render_template("main/ingredient.html", ingredient=ingredient)
+

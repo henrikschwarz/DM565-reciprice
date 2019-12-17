@@ -123,19 +123,18 @@ def populate_ingredient_whitelist():
     collection = db.ingredient_frequency
     ingredient_collection = db.ingredients
     
-    lis = [100000, 1000]
+    lis = [100000, 10]
     for i in range(len(lis)-1):
-        for item in collection.find({"amount" : {"$lt" : lis[i], "$gt" : lis[i+1]}}):
-            ing = Ingredient(item['name'], [], [])
-            reg = '.*%s.*' % item['name']
-            for related_item in collection.find({"name" : {'$regex': reg}, "amount" :  {"$gt" : lis[i+1]}}):  
-                if related_item['name'] != item['name']:
-                    print("Found similar name to", item['name'], "which is \n", related_item['name'])
-                    print("create alias? in", ing.name, "y/n")
-                    putin = input('y/n')
-                    if putin == 'y':
-                        ing.alias.append(item['_id'])
-            ingredient_collection.insert_one(ing.__dict__) 
-            #use dict for inserted items
+        for item in collection.find({"amount" : {"$lt" : lis[i], "$gt" : lis[i+1]}}).sort('amount' , -1):
+            if ingredient_collection.count_documents({'name' : item['name']}) == 0:
+                ing = Ingredient(item['name'], [], [])
+                ingredient_collection.insert_one(ing.__dict__)
+                reg = '(.* {0}$|^{0}.*)'.format(item['name'])
+                for related_item in collection.find({'name' : {'$regex' : reg}, 'amount' : {"$gt" : lis[i+1]}}).sort('amount' , -1):
+                    if related_item['name'] != item['name']:
+                        related_ing = Ingredient(related_item['name'],[], [item['name']]) 
+                        ingredient_collection.replace_one({'name' : related_item['name']},related_ing.__dict__, upsert=True)
 
-populate_ingredient_whitelist()
+
+
+
