@@ -34,13 +34,13 @@ def recipecreate_create(name):
 
 @main.route("/recipeget/<name>")
 def recipe_get(name):
-    return '<h1>found %s!</h1>' % models.get_recipe(name)._id
+    return '<h1>found %s!</h1>' % models.get_recipe(name)
 
 @main.route("/ingredientcreate/<name>")
 def ingredient_create(name):
-    ing = models.Ingredient(name, 'meme', datetime.utcnow(), 49, [])
+    ing = models.Ingredient(name, [], [])
     return '<h1>found %s!</h1>' % ing.insert()
 
 @main.route("/ingredientget/<name>")
 def ingredient_get(name):
-    return '<h1>found %s!</h1>' % models.get_ingredient(name)._id
+    return '<h1>found %s!</h1>' % models.get_ingredient(name).name

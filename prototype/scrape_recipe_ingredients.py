@@ -1,12 +1,13 @@
 from bs4 import BeautifulSoup
-import time
 import re
+import sys
 import urllib.request
 import multiprocessing
 from concurrent.futures import ThreadPoolExecutor,as_completed
 from concurrent.futures import Future
 from pymongo import MongoClient
 from mongoenv import MONGO_URI
+from reciprice.models import *
 
 client = MongoClient(MONGO_URI)
 
@@ -27,7 +28,7 @@ def create_urls(recipe_id, no_recipes):
 """
 get receipe at url
 """
-def get_recipe(url):
+def get_recipe_url(url):
     html = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(html, 'html.parser')
     recipetable = soup.findAll('td', {'width': 300})[4]  # find the table containing the recipe
@@ -102,15 +103,39 @@ def make_ranking(lis):
 
     return flat_list 
 #39027
-insert_list = make_ranking(execute_get_in_parallel(0,10,get_ingredients))
-remove_dict = {}
-in_list = []
 
-for item in insert_list:
-    if item not in remove_dict:
-        in_list.append({'name': item, 'amount':insert_list.count(item)})
-        remove_dict.update({item: 'True'})
+def insert_ingredient_frequency():
+    insert_list = make_ranking(execute_get_in_parallel(0,10,get_ingredients))
+    remove_dict = {}
+    in_list = []
 
-db = client.innovation
-collection = db.ingredient
-collection.insert_many(in_list)
+    for item in insert_list:
+        if item not in remove_dict:
+            in_list.append({'name': item, 'amount':insert_list.count(item)})
+            remove_dict.update({item: 'True'})
+
+    db = client.innovation
+    collection = db.ingredient_frequency
+    collection.insert_many(in_list)
+
+def populate_ingredient_whitelist():
+    db = client.innovation
+    collection = db.ingredient_frequency
+    ingredient_collection = db.ingredients
+    
+    lis = [100000, 1000]
+    for i in range(len(lis)-1):
+        for item in collection.find({"amount" : {"$lt" : lis[i], "$gt" : lis[i+1]}}):
+            ing = Ingredient(item['name'], [], [])
+            reg = '.*%s.*' % item['name']
+            for related_item in collection.find({"name" : {'$regex': reg}, "amount" :  {"$gt" : lis[i+1]}}):  
+                if related_item['name'] != item['name']:
+                    print("Found similar name to", item['name'], "which is \n", related_item['name'])
+                    print("create alias? in", ing.name, "y/n")
+                    putin = input('y/n')
+                    if putin == 'y':
+                        ing.alias.append(item['_id'])
+            ingredient_collection.insert_one(ing.__dict__) 
+            #use dict for inserted items
+
+populate_ingredient_whitelist()

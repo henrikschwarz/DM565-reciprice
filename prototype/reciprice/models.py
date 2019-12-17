@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 
 from .extentions import mongo
 
-
 class User:
     def __init__(self, username, created):
         self.username = username
@@ -79,9 +78,13 @@ def get_recipe(name):
     re = mongo.db.recipes.find_one_or_404(name)
     return Recipe(name=re['_id'], procedure=re['procedure'], ingredient_list=re['ingredient_list'], source=re['source'], created=re['created'])
 
+"""
+The Ingredient class holds the name of the ingredient, a list of product identifiers, and if it has an alias.
+"""
 class Ingredient:
-    def __init__(self, name, product_list):
+    def __init__(self, name, product_list, alias=[]):
         self.name = name
+        self.alias = alias
         self.product_list = product_list
 
     def insert(self):
@@ -90,11 +93,11 @@ class Ingredient:
         
 
 def get_ingredient(name):
-    ingredient = mongo.db.ingredients.find_one_or_404(name)
-    return Ingredient(name=ingredient['_id'], product_list=['product_list'])
+    ingredient = mongo.db.ingredients.find_one_or_404({'name' : name})
+    return Ingredient(name=ingredient['name'], alias=['alias'],product_list=['product_list'])
 
 class Product:
-    def __init__(self, ean, name, amount, unit, price, price_history):
+    def __init__(self,  name, amount, unit, price, price_history,ean=0):
         self.ean = ean
         self.name = name
         self.amount = amount
