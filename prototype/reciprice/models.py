@@ -9,7 +9,7 @@ class User:
 
     # Returns the dictionary key that identifies this user
     def get_id(self):
-        return {'_id': self._id}
+        return self.username
 
     # Replaces the database user date with data from this object.
     # Will create the user, if it does not already exist.
@@ -19,8 +19,8 @@ class User:
     # Changes the username, and optionally updates the database as well
     def set_username(self, username, update_db=True):
         if update_db:
-            mongo.db.users.update_one(self.get_id(), {'_id': username})
-        self._id = username
+            mongo.db.users.update_one({'username': username})
+        self.username = username
 
     # Changes the creation time, and optionally updates the database as well
     def set_created(self, created, update_db=True):
@@ -29,7 +29,7 @@ class User:
         self.created = created
 
     def __repr__(self):
-        return 'User(%s, %s)' % (self._id, self.created)
+        return 'User(%s, %s)' % (self.username, self.created)
 
 
 # Returns a user object with data populated from the database
