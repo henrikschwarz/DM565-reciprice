@@ -14,5 +14,3 @@ def query_product_suggestions(query):
 
 def pretty_print(data):
     print(json.dumps(data, indent=4, ensure_ascii=False))
-
-pretty_print(query_product_suggestions('mælk'))
