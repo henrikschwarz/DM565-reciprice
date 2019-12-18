@@ -7,9 +7,10 @@ from . import models
 
 def create_app(config_object='reciprice.settings'):
     app = Flask(__name__)
+    app.secret_key = "dev"
     app.config.from_object(config_object)
 
-    csrf.init_app(app)
+    #csrf.init_app(app)
     mongo.init_app(app)
 
     app.register_blueprint(main)

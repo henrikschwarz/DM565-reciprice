@@ -11,6 +11,7 @@ class User:
     # Returns the dictionary key that identifies this user
     def get_id(self):
         return self.username
+
     def get_filter(self):
         return {'username': self.username}
 
@@ -33,6 +34,7 @@ class User:
 
     def __repr__(self):
         return 'User(%s, %s)' % (self.username, self.created)
+
 
 # Returns a user object with data populated from the database
 def load_user(username):
@@ -68,7 +70,7 @@ class Recipe:
     def __init__(self, name, procedure, ingredient_list, source, created):
         self.name = name
         self.procedure = procedure
-        self.ingredient_list = ingredient_list
+        self.ingredient_list = ingredient_list  # example of list [[amount, unit, ingredient],[amount, unit, ingredient]]
         self.source = source
         self.created = created
 
@@ -103,6 +105,7 @@ class Ingredient:
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({'name': name})
     return Ingredient(name=ingredient['name'], alias=['alias'], product_list=['product_list'])
+
 
 class Product:
     def __init__(self, name, amount, unit, price, price_history, ean=0):

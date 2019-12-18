@@ -1,0 +1,130 @@
+{% extends "main/base.html" %}
+
+{% block head %}
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+{% endblock %}
+
+{% block title %} Lav opskrift {% endblock %}
+
+{% block content %}
+    <h3>Tilføj ny opskrift</h3>
+    <h5>Lav nye opskrifter du kan dele med folk.</h5>
+    <form action="" method="post">
+        <div class="form-group">
+            <label class="h6">Opskrift titel</label>
+            <input type="text" class="form-control" name="recipe-name">
+        </div>
+        <div class="form-group">
+            <label class="h6">Ingredienser</label>
+            <div class="row">
+                <div class="col-md-12 mt-2 row">
+                    <div class="col-md-6">
+                        <label>Ingrediens</label>
+                        <input id="auto-ingredient" type="text" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Mængde(gram/ml)</label>
+                        <input id="amount-data" type="number" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label>Enhed</label>
+                        <select id="select-data">
+                            <option value="ml">ml</option>
+                            <option value="gram">Gram</option>
+                            <option value="tsk">Tsk</option>
+                            <option value="spk">Spk</option>
+                        </select>
+                    </div>
+                </div>
+                <span id="add-extra-input" type="submit" class="btn btn-success m-2">Tilføj ekstra ingrediens</span>
+                <div id="new-elements" class="row"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="h6">Fremgangsmåde</label>
+            <textarea name="procedure" id="" cols="20" rows="10" class="form-control"></textarea>
+        </div>
+        <input type="submit" value="Send" class="btn btn-success">
+    </form>
+{% endblock %}
+
+{% block scripts %}
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $(document).on('click', 'span#delete-data', function () {
+                $(this).parents('div.col-md-12.row.mt-2').remove();
+        });
+
+        $('span.btn-danger').click(function () {
+            console.log("Clicked");
+        });
+    });
+</script>
+<script>
+    $(function() {
+        var availableTutorials = [
+            "ActionScript",
+            "Bootstrap",
+            "C",
+            "C++",
+            "Ecommerce",
+            "Jquery",
+            "Groovy",
+            "Java",
+            "JavaScript",
+            "Lua",
+            "Perl",
+            "Ruby",
+            "Scala",
+            "Swing",
+            "XHTML"
+        ];
+
+        $('#auto-ingredient').autocomplete({
+            source: availableTutorials,
+        });
+
+        $('#add-extra-input').click(function () {
+            var ingredient_data = $('#auto-ingredient').val();
+            if (ingredient_data == ""){
+                alert("Needs data");
+                $('#auto-ingredient').focus();
+                return;
+            }
+            var amount_data = $('#amount-data').val();
+            if (amount_data == ""){
+                alert("Needs data");
+                $('#amount-data').focus();
+                return;
+            }
+            var unit_data = $('#select-data').val();
+            console.log(ingredient_data);
+            console.log(amount_data);
+
+            var div_start = "<div class='col-md-12 row mt-2'>";
+            var ingredient_div_start = "<div class='col-md-6'>";
+            var ingredient_input = "<input type='text' class='form-control' name='ingredients' value='"+ingredient_data+"' readonly='readonly'>";
+            var ingredient_div_end = "</div>";
+            var amount_div_start = "<div class='col-md-4'>";
+            var amount_input = "<input type='text' class='form-control' name='amount' value='"+amount_data+"' readonly='readonly'>";
+            var amount_div_end = "</div>";
+            var unit_div_start = "<div class='col-md-1'>";
+            var unit_input = "<input type='text' class='form-control' name='unit' value='"+unit_data+"' readonly='readonly'>";
+            var unit_div_end = "</div>";
+            var delete_button = "<div class='col-md-1'><span id='delete-data' class='btn btn-danger'>Delete</span></div>";
+            var div_end = "</div>";
+            var element = div_start+ingredient_div_start+ingredient_input+ingredient_div_end+
+                amount_div_start+amount_input+amount_div_end+unit_div_start+
+                unit_input+unit_div_end+delete_button+div_end;
+            $("#new-elements").after(element);
+
+            $('#auto-ingredient').val('');
+            $('#amount-data').val('');
+            $('#select-data').prop("selectedIndex", 0);
+        });
+    });
+
+</script>
+{% endblock %}
