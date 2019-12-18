@@ -4,11 +4,9 @@
 
 {% block content %}
     <h2>Recipes</h2>
-<ul class="list-group">
+    <ul class="list-group">
     {%  for recipe in recipes %}
-    <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe._id) }}">{{ recipe._id }}</a></li>
+    <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe[1]) }}">{{ recipe[0] }}</a></li>
     {% endfor %}
-</ul>
-
-</div>
+    </ul>
 {% endblock %}

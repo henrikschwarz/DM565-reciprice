@@ -1,3 +1,4 @@
+import flask
 from flask import Blueprint, render_template
 from bson.json_util import dumps
 from .extentions import mongo
@@ -42,13 +43,15 @@ def create_recipe(name):
 
 @main.route("/recipe/<name>")
 def recipe_get(name):
-    return '<h1>found %s!</h1>' % models.get_recipe(name)
+    name_slash_restored = name.replace('%2F', '/')
+    return '<h1>found %s!</h1>' % models.get_recipe(name_slash_restored)
 
 
 @main.route("/recipes/")
 def list_recipes():
-    recipes = mongo.db.recipes.find()
-    return render_template("main/recipes.html", recipes=recipes)
+    recipes = mongo.db.recipes.distinct('name')
+
+    return render_template("main/recipes.html", recipes=[(i, i.replace('/', '%2F')) for i in recipes])
 
 
 @main.route("/ingredients_json/")
