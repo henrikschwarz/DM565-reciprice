@@ -1,12 +1,22 @@
 {% extends "main/base.html" %}
 
-{% block title %} Recipes {% endblock %}
+{% block title %} Opskrifter {% endblock %}
 
 {% block content %}
-    <h2>Recipes</h2>
-    <ul class="list-group">
+<div class="row" style="padding-bottom: 8px;">
+    <div class="col-md-6">
+        <h3>Opskrifter</h3>
+    </div>
+    <div class="col-md-6">
+        <div class="float-right" id="data-target">
+            <a href="{{ url_for('main.create_recipe') }}"><input type="submit" value="Lav ny" class="btn btn-danger"></a>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<ul class="list-group">
     {%  for recipe in recipes %}
     <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe[1]) }}">{{ recipe[0] }}</a></li>
     {% endfor %}
-    </ul>
+</ul>
 {% endblock %}

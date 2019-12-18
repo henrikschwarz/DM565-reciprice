@@ -6,7 +6,12 @@ import sys
 import time
 import urllib.request
 import multiprocessing
+<<<<<<< HEAD
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import Future
+=======
 from concurrent.futures import ThreadPoolExecutor, as_completed, Future, ALL_COMPLETED
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
 from pymongo import MongoClient
 from mongoenv import MONGO_URI
 from reciprice.models import *
@@ -25,7 +30,10 @@ def create_urls(recipe_id, no_recipes):
     urls = []
     for i in range(no_recipes):
         urls.append(ingredient_base_url % str(int(recipe_id) + i))
+<<<<<<< HEAD
+=======
 
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
     return urls
 
 
@@ -33,6 +41,8 @@ def create_urls(recipe_id, no_recipes):
 get recipe at url
 gets all ingredients of a recipe including amounts and units
 """
+
+
 def get_recipe_url(url):
     html = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(html, 'html.parser')
@@ -60,6 +70,8 @@ def get_recipe_url(url):
 returns the ingredients of one recipe at url, this does not include amounts and units
 returns a list of ingredients
 """
+
+
 def get_ingredients(url):
     html = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(html, 'html.parser')
@@ -77,7 +89,10 @@ def get_ingredients(url):
             if rege.search(i_t) == None:
                 ingredients.append(i_t)
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
     return ingredients
 
 
@@ -85,6 +100,8 @@ def get_ingredients(url):
 take a recipe_id, the number of recipes, and a the name of a function to execute on the urls created
 returns a list of results provided by the function given
 """
+
+
 def execute_get_in_parallel(recipe_id, no_recipes, function):
     urls = create_urls(recipe_id, no_recipes)
 
@@ -140,6 +157,10 @@ def populate_ingredient_whitelist():
                         'amount', -1):
                     if related_item['name'] != item['name']:
                         related_ing = Ingredient(related_item['name'], [], [item['name']])
+<<<<<<< HEAD
+                        ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,
+                                                          upsert=True)
+=======
                         ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,upsert=True)
 
 
@@ -197,3 +218,4 @@ def scrape_recipes(start=0, end=39027):
     print('Database now has', client.innovation.recipes.count_documents({}), 'recipes.')
 
 #scrape_recipes(start=0)
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
