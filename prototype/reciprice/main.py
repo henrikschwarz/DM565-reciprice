@@ -136,7 +136,7 @@ def list_recipes_json():
 def list_specific_recipe_json(name):
     recipe_dict = {}
     name = str(name).capitalize()
-    regex = r'.*%s.*' % name
+    regex = '.*{0}.*'.format(name)
     recipes = mongo.db.recipes.find({"name": {"$regex": regex}})
     l = []
     for item in recipes:
