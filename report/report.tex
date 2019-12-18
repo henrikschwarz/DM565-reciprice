@@ -349,8 +349,25 @@ reduced the running time of creating the ingredient frequency collection from ab
 hour(did not finish), to about 25 minutes.
 
 \subsubsection{Populating the Ingredient Collection}
-
-
+As we have obtained the frequencies of all appropriate ingredients we need to insert
+these into the database as proper ingredients. We do this in the
+\texttt{populate\_ingredient\_whitelist()} function.
+To avoid to many "exotic" ingredient names
+in our collection of ingredients, we set a minimum frequency of greater than 10 occurrences. We
+determined that this threshold was adequate, in that we could reasonably expect at least
+some recipes would contain these 1994 different common ingredients. However these
+ingredients are not distinct ingredients. That is why we have aliases, which point from
+one ingredient to another. We determine if one ingredient is an alias of another by,
+iterating through the frequency collection, taking the most frequent ingredients first
+(the higher frequency the more we can trust the integrity of the ingredient) and running a
+search with the regular regular expression
+\begin{lstlisting}[basicstyle=\normalsize\ttfamily]
+'(.* {0}$|^{0}.*)'.format(item['item'])\end{lstlisting}
+This regular expression matches the words beginning with 'name' and the word ending with
+'name' preceding a space. This does catches adjectives attached to an ingredient.
+Then the word which matches the regular expression, is inserted with an alias to the more
+frequent ingredient.  This is not a perfect approach, but it gets the job done. The
+database is populated continuously throughout the iterations.
 
 
 \subsection{Getting Prices}
