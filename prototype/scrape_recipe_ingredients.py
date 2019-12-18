@@ -140,8 +140,7 @@ def populate_ingredient_whitelist():
                         'amount', -1):
                     if related_item['name'] != item['name']:
                         related_ing = Ingredient(related_item['name'], [], [item['name']])
-                        ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,
-                                                          upsert=True)
+                        ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,upsert=True)
 
 
 def is_whitelisted(ingredient):
