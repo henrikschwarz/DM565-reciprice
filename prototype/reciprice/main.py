@@ -86,9 +86,13 @@ def create_recipe():
 @main.route("/recipes/<name>")
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
-    recipe = models.get_recipe(name_slash_restored)
-    ingredient = models.get_ingredient(name_slash_restored)
-    product_suggestion = ingredient.get_product_list()
+    recipe = models.get_recipe(name_slash_restored) # one recipe
+    products = []
+    for item in recipe.ingredient_list: # query all ingredients
+        item_name = item[2]
+        ingredient = models.get_ingredient(item_name)
+        products.append(ingredient.get_product_list())
+    product_suggestion = products
     return render_template('main/recipe.html', recipe=recipe, product_suggestion=product_suggestion)
 
 
