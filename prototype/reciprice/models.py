@@ -155,6 +155,7 @@ class Product:
 
     def add_price_to_history(self, price, db=mongo.db):
         if price != self.price_history[-1]:
+            self.price = price
             self.price_history.append(price)
             db.products.update({'ean': self.ean}, {'$set': {'price_history': self.price_history}})
         return self.price_history
