@@ -46,7 +46,6 @@ def create_recipe():
         else:
             flash('Ingen opskrift navn')
             error = True
-
         try:
             if request.form["ingredients"] and request.form["amount"] and request.form["unit"]:
                 ingredients = request.form.getlist("ingredients")

@@ -120,11 +120,11 @@ class Ingredient:
         else:
             eans = self.product_list
 
-        return [(i['ean'], i['name']) for i in db.products.find({'ean': {'$in': eans}})]
+        return [(i['ean'], i['name']) for i in mongo.db.products.find({'ean': {'$in': eans}})]
 
 
 def get_ingredient(name, db=mongo.db):
-    ingredient = db.ingredients.find_one({'name': name})
+    ingredient = mongo.db.ingredients.find_one({'name': name})
     return Ingredient(name=ingredient['name'], alias=ingredient['alias'], product_list=ingredient['product_list'])
 
 
