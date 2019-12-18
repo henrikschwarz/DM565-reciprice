@@ -28,7 +28,9 @@
         <div class="col-md-12 m-2">
             <hr class="my-4">
             <h5>Fremgangsmåde for opskriften er:</h5>
-            <p>{{ recipe.procedure }}</p>
+            {% for item in recipe.procedure %}
+                <p>{{ item.capitalize() }}</p>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

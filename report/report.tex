@@ -245,5 +245,57 @@ scraper is to populate the database with the correct data.
 \subsection{Creating Relationships in the Data}
 
 \subsection{User Interface}
+\subsubsection{Generating the html}
+\paragraph{Jinja2}
+For our user interface we have used html, which makes sense when making a
+webapp. To generate our html templates we have used a templating engine called
+Jinja2 which our app engine flask supports. Jinja2 is widely used for python
+web framework, because it is fast, secure and easy to use.\\
+
+The language can use control expressions like if statements and for loops. It
+also use of blocks and macros. Blocks are used for template inheritance which
+allows us to create resusable templates. The tempaltes are created as html files
+where we add the control structures using Jinja2 expressions. We have defined
+a base template that imports css and scripts that are used by all the templates.
+Using blocks other templates can add to the base template. In our case the base
+template is 'templates/main/base.html'. We then reuse that template to create
+other templates and void duplicate lines of html.
+
+\paragraph{jQuery and Ajax}
+jQuery is a javascript framework that enables easy HTML DOM, event handling,
+css animation and ajax request. It threats html documents like a three stucture,
+which lets us easily add and remove html elements.\\
+
+Ajax is asyncronouns javascript and XML which can be used to make asyncronouns
+web applications. We use it primarily to query data on the backend and then show
+it using jQuery on the frontend.
+
+\paragraph{Views}
+Our webapp has to primary views which are:
+\begin{enumerate}
+	\item /recipes/
+	\item /ingredients/
+\end{enumerate}
+\subparagraph{Recipes}
+The recipes view shows all the recipes that are scraped and collected. The
+recipes can be searched by name by writing in the search input and then pressing
+enter. We then use jQuery and ajax to query a endpoint that returns all the
+names that match a regular expression. The recipes can then be access
+individually using links from the list.\\
+
+We can also create a new list using the 'lav ny' button which redirects to a
+view with a form. The form has a field called 'Ingrediens' where if we write
+something of four characters length and press down we get a list of viable
+ingredients. We then add a a amount and a unit and press 'Add ingrediens' to add
+it to the recipe. When filled out we can press 'send' and send the data to our
+backend where it is validated and added to the database.
+
+\subparagraph{Ingredients}
+Ingredients has a list view just like recipes where all the ingredients are
+listed. The ingredients can be searched just like recipes and there are likes
+for individual links for every ingredient.\\
+
+When we access the individual ingredients we can see the alias for the
+ingredient and the recipes the ingredient is part of. 
 
 \end{document}
