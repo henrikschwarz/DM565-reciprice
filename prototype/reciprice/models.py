@@ -78,10 +78,18 @@ class Recipe:
         recipes = mongo.db.recipes
         recipes.insert(self.__dict__)
 
+    def __repr__(self):
+        split_procedure = self.procedure.split(' ')
+        procedure_short = ' '.join(split_procedure[:min(len(split_procedure), 5)])
+        ingredients_short = self.ingredient_list[:min(len(self.ingredient_list), 3)]
+        ingredients = ', '.join(i[2] for i in ingredients_short)
+        return 'Recipe(Name: %s, Procedure: %s..., Ingredients: %s..., Source: %s, Created: %s)' %\
+               (self.name, procedure_short, ingredients, self.source, self.created)
+
 
 def get_recipe(name):
-    recipe = mongo.db.recipes.find_one_or_404(name)
-    return Recipe(name=recipe['_id'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'],
+    recipe = mongo.db.recipes.find_one_or_404({'name': name})
+    return Recipe(name=recipe['name'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'],
                   source=recipe['source'],
                   created=recipe['created'])
 

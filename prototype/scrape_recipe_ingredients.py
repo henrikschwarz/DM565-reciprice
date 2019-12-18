@@ -1,10 +1,17 @@
+import concurrent
+
 from bs4 import BeautifulSoup
 import re
 import sys
+import time
 import urllib.request
 import multiprocessing
+<<<<<<< HEAD
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from concurrent.futures import Future
+=======
+from concurrent.futures import ThreadPoolExecutor, as_completed, Future, ALL_COMPLETED
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
 from pymongo import MongoClient
 from mongoenv import MONGO_URI
 from reciprice.models import *
@@ -23,11 +30,15 @@ def create_urls(recipe_id, no_recipes):
     urls = []
     for i in range(no_recipes):
         urls.append(ingredient_base_url % str(int(recipe_id) + i))
+<<<<<<< HEAD
+=======
+
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
     return urls
 
 
 """
-get receipe at url
+get recipe at url
 gets all ingredients of a recipe including amounts and units
 """
 
@@ -78,6 +89,10 @@ def get_ingredients(url):
             if rege.search(i_t) == None:
                 ingredients.append(i_t)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
     return ingredients
 
 
@@ -142,5 +157,65 @@ def populate_ingredient_whitelist():
                         'amount', -1):
                     if related_item['name'] != item['name']:
                         related_ing = Ingredient(related_item['name'], [], [item['name']])
+<<<<<<< HEAD
                         ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,
                                                           upsert=True)
+=======
+                        ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,upsert=True)
+
+
+def is_whitelisted(ingredient):
+    return client.innovation.ingredients.find_one({'name': ingredient})
+
+
+def get_recipe_object(recipe_id):
+    url = 'https://www.dk-kogebogen.dk/opskrifter/udskrift/u-kommentar-u-beregn-u-billede.php?id=' + str(recipe_id)
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html, 'html.parser')
+    name = soup.find('h1').get_text()
+    recipetable = soup.findAll('td', {'width': 300})[4]  # find the table containing the recipe
+    for head in recipetable.findAll('table'):
+        head.extract()
+    procedure = clean_soup(recipetable)
+
+    table = soup.find('table', {'cellpadding': 3})  # find the table containing ingredients
+    rows = table.findAll('tr')
+    ingredients = []
+    for row in rows:
+        amount, unit, ingredient = row.findAll('td')
+        for span in ingredient.findAll('span'):
+            span.extract()
+        a_t, u_t, i_t = clean_soup(amount), clean_soup(unit), clean_soup(ingredient)
+
+        if rege.search(i_t) is not None:
+            return None
+
+        if not is_whitelisted(i_t):
+            return None
+
+        if len(a_t) + len(u_t) + len(i_t) > 0:
+            ingredients.append([a_t, u_t, i_t])
+
+    recipe = Recipe(name, procedure, ingredients, 'dk-kogebogen-' + str(recipe_id), datetime.utcnow())
+    return recipe
+
+
+def scrape_recipes(start=0, end=39027):
+    print('Scraping recipes from dk-kogebogen in interval', start, 'to', end)
+    print('Datebase has', client.innovation.recipes.count_documents({}), 'recipes before scraping.')
+    start_time = time.time()
+    with ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()) as executor:
+        futures = [executor.submit(get_recipe_object, i) for i in range(start, end + 1)]
+
+        for result in as_completed(futures):
+            recipe = result.result()
+            if recipe is not None:
+                client.innovation.recipes.replace_one({'source': recipe.source}, result.result().__dict__, upsert=True)
+
+        concurrent.futures.wait(futures, timeout=None, return_when=ALL_COMPLETED)
+    end_time = time.time()
+    print('Scraping took', end_time-start_time, 'seconds.')
+    print('Database now has', client.innovation.recipes.count_documents({}), 'recipes.')
+
+#scrape_recipes(start=0)
+>>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
