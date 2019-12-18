@@ -124,6 +124,27 @@ class Product:
         self.price = price
         self.price_history = price_history
 
-    def insert(self):
-        products = mongo.db.products
-        return products.insert(self.__dict__)
+    # Replaces the database product data with data from this object.
+    # Will create the product, if it does not already exist.
+    def replace(self, db=mongo.db):
+        db.products.replace_one({'ean': self.ean}, self.__dict__, upsert=True)
+
+    def insert(self, db=mongo.db):
+        db.products.insert(self.__dict__)
+
+    def add_price_to_history(self, price, db=mongo.db):
+        if price != self.price_history[-1]:
+            self.price_history.append(price)
+            db.products.update({'ean': self.ean}, {'$set': {'price_history': self.price_history}})
+        return self.price_history
+
+
+def create_or_update_product(ean, title, price, amount=1, unit='stk', db=mongo.db):
+    existing = db.products.find_one({'ean': ean})
+    if existing is None:
+        product = Product(title, amount, unit, price, [price], ean)
+        product.insert(db)
+    else:
+        product = Product(existing['name'], existing['amount'], existing['unit'], existing['price'], existing['price_history'])
+        product.add_price_to_history(price, db)
+    return product
