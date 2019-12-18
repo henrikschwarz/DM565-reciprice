@@ -90,4 +90,5 @@ def list_specific_ingredient_json(name):
 @main.route("/ingredients/<name>")
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
-    return render_template("main/ingredient.html", ingredient=ingredient)
+    used_in = [i['name'] for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}})]
+    return render_template("main/ingredient.html", ingredient=ingredient, used_in=used_in)

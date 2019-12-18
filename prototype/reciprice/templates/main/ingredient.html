@@ -6,15 +6,25 @@
     <h3>{{ ingredient.name }}</h3>
     <ul>
         {% if ingredient.alias %}
-        <li>Aliases
+        <li class="alias-list">Aliaser
             <ul>
                 {% for item in ingredient.alias %}
-                <li>{{ item }}</li>
+                <li class="alias-list-item"><a href="{{ url_for('main.get_ingredient', name=item) }}">{{ item }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+
+        {% if used_in %}
+        <li class="recipe-list">Opskrifter
+            <ul>
+                {% for item in used_in %}
+                    <li class="recipe-list-item"><a href="{{ url_for('main.recipe_get', name=item) }}">{{ item }}</a></li>
                 {% endfor %}
             </ul>
         </li>
         {% else %}
-            <li>There are no aliases</li>
+            <li>Bliver ikke brugt i nogle opskrifter</li>
         {% endif %}
     </ul>
 
