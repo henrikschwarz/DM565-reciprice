@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, flash
 import re
 
+import pymongo
+from flask import Blueprint, render_template
 from bson.json_util import dumps
 from .extentions import mongo
 
@@ -84,7 +86,7 @@ def recipe_get(name):
 
 @main.route("/recipes/")
 def list_recipes():
-    recipes = mongo.db.recipes.distinct('name')
+    recipes = sorted(mongo.db.recipes.distinct('name'))
     return render_template("main/recipes.html", recipes=[(re.sub("\d+$", "", i).strip(), i.replace('/', '%2F')) for i in recipes])
 
 
@@ -132,5 +134,5 @@ def list_specific_ingredient_json(name):
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
     #used_in is a list consisting of tuple (reader-friendly_name, url_name) for each recipe that contains the ingredient
-    used_in = [(re.sub("\d+$", "", i['name']).strip(), i['name'].replace('/', '%2F')) for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}})]
+    used_in = [(re.sub("\d+$", "", i['name']).strip(), i['name'].replace('/', '%2F')) for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}}).sort('name', pymongo.ASCENDING)]
     return render_template("main/ingredient.html", ingredient=ingredient, used_in=used_in)
