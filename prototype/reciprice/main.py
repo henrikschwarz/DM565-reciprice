@@ -16,11 +16,6 @@ def index():
     return render_template("main/index.html", userlist=models.get_usernames())
 
 
-@main.route("/login")
-def login():
-    return render_template("main/login.html")
-
-
 @main.route("/user/<username>")
 def user_profile(username):
     username_capitalized = str(username).capitalize()
@@ -84,12 +79,12 @@ def create_recipe():
 @main.route("/recipes/<name>")
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
-    recipe = models.get_recipe(name_slash_restored) # one recipe
+    recipe = models.get_recipe(name_slash_restored)  # one recipe
     products = []
-    for item in recipe.ingredient_list: # query all ingredients
+    for item in recipe.ingredient_list:  # query all ingredients
         item_name = item[2]
         ingredient = models.get_ingredient(item_name)
-        products.append(ingredient.get_product_list())
+        products.append(','.join(ingredient.get_product_ean_list()))
     product_suggestion = products
     recipe.procedure = (''.join([each.capitalize() for each in re.split('([.!?] *)', (re.sub('\r\n|\n\r\n', " ", recipe.procedure)))]))
     return render_template('main/recipe.html', recipe=recipe, product_suggestion=product_suggestion)
@@ -126,15 +121,17 @@ def create_ingredient(name):
 
 #### Json
 
-@main.route('/json/products/<ingredient_name>')
-def list_products_json(ingredient_name):
-    name_slash_restored = ingredient_name.replace('%2F', '/')
-    ingredient = mongo.db.ingredients.find_one({'name': name_slash_restored})
+@main.route('/json/products/<ean_list>')
+def list_products_json(ean_list):
     products = []
-    for item in ingredient["product_list"]:
-        product = mongo.db.products.find({'ean': item})
-        products.append(product)
-    data = {'products': products}
+    list_ean = ean_list.split(",")
+    for ean in list_ean:
+        item = mongo.db.products.find_one({"ean": ean})
+        if item is not None:
+            print("(%s, %s)" % (item["name"], item["price"]))
+            products.append(item)
+
+    data = {"products": products}
     return dumps(data, ensure_ascii=False)
 
 
@@ -154,7 +151,7 @@ def list_specific_recipe_json(name):
     recipe_dict = {}
     name = str(name).capitalize()
     regex = '.*{0}.*'.format(name)
-    recipes = mongo.db.recipes.find({"name": {"$regex": regex, '$options' : 'i'}})
+    recipes = mongo.db.recipes.find({"name": {"$regex": regex, '$options': 'i'}})
     l = []
     for item in recipes:
         l.append(item["name"])
@@ -177,7 +174,7 @@ def list_ingredients_json():
 def list_specific_ingredient_json(name):
     ingredient_dict = dict()
     regex = r'.*%s.*' % name
-    ingredients = mongo.db.ingredients.find({"name": {"$regex": regex, '$options' : 'i'}})
+    ingredients = mongo.db.ingredients.find({"name": {"$regex": regex, '$options': 'i'}})
     l = []
     for item in ingredients:
         l.append(item["name"])
