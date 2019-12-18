@@ -83,7 +83,7 @@ def create_recipe():
     return render_template("main/create_recipe.html")
 
 
-@main.route("/recipe/<name>")
+@main.route("/recipes/<name>")
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
     recipe = models.get_recipe(name_slash_restored)
@@ -121,6 +121,30 @@ def create_ingredient(name):
 
 #### Json
 
+@main.route("/json/recipes/")
+def list_recipes_json():
+    recipe_dict = {}
+    recipes = mongo.db.recipes.find()
+    l = []
+    for item in recipes:
+        l.append(item["name"])
+    recipe_dict["recipes"] = l
+    return dumps(recipe_dict, ensure_ascii=False)
+
+
+@main.route("/json/recipes/<name>")
+def list_specific_recipe_json(name):
+    recipe_dict = {}
+    name = str(name).capitalize()
+    regex = r'.*%s.*' % name
+    recipes = mongo.db.recipes.find({"name": {"$regex": regex}})
+    l = []
+    for item in recipes:
+        l.append(item["name"])
+    recipe_dict["recipes"] = l
+    return dumps(recipe_dict, ensure_ascii=False)
+
+
 @main.route("/json/ingredients/")
 def list_ingredients_json():
     ingredient_dict = dict()
@@ -135,7 +159,7 @@ def list_ingredients_json():
 @main.route("/json/ingredients/<name>")
 def list_specific_ingredient_json(name):
     ingredient_dict = dict()
-    regex = r'%s' % name
+    regex = r'.*%s.*' % name
     ingredients = mongo.db.ingredients.find({"name": {"$regex": regex}})
     l = []
     for item in ingredients:
