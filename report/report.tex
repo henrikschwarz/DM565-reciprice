@@ -13,7 +13,9 @@
 \usepackage{verbatim} 
 \usepackage{xcolor}
 \title{DM565 Innovation Project} 
-\author{authors} 
+\author{Peter Heilbo Ratgen - perat17\\
+Henrik Schwarz - hschw17\\
+Lucas Olai Jarlkov Olsen - luols17}
 \date{\today}
 
 \definecolor{commentsColor}{rgb}{0.497495, 0.497587, 0.497464}
@@ -371,8 +373,30 @@ database is populated continuously throughout the iterations.
 
 
 \subsection{Getting Prices}
+We obtain prices from the aforementioned \url{api.sallinggroup.com} API. Here we use their
+product suggestion API, we send query in the form of a string. The API then sends back
+relevant product suggestions, in a JSON file: thus we receive data in the form of:
+\begin{lstlisting}[basicstyle=\normalsize\ttfamily]
+{
+  "title": "Naturmaelk Bio Minimaelk 0,5 1 L",
+  "id": "93008500001",
+  "prod_id": "19680",
+  "price": 11.95,
+  "description": "",
+  "link": "https://www.bilkatogo.dk/s?query=19680",
+  "img": "https://image.prod.iposeninfra.com/bilkaimg.php?pid=19680&imgType=jpeg"
+}
+\end{lstlisting}
+a list of suggestions containing the title, id, prod\_id, a price, for some items there is
+a description, and finally links to the site where the item can be bought, and a link to
+an image of the product. We have a Product object where we store the data about each
+individual product. We hold the EAN, name, amount, unit, most recent price, and the price
+history. Whenever we query a product, we will check in our database to see if the observed
+price is different from the last price we observed, in which case we will update the price
+add it to our price history. Individual ingredients(without aliases) are also connected to
+different products in their \texttt{product\_list}. Thus the product list is consulted 
+each time an ingredient is queried.
 
-\subsection{Creating Relationships in the Data}
 
 \subsection{User Interface}
 \subsubsection{Generating the html}
