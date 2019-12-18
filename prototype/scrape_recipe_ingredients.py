@@ -75,9 +75,8 @@ def get_ingredients(url):
             span.extract()
         i_t = clean_soup(ingredient)
 
-        if len(i_t) > 0:
-            if rege.search(i_t) == None:
-                ingredients.append(i_t)
+        if len(i_t) > 0 and rege.search(i_t) == None:
+            ingredients.append(i_t)
     return ingredients
 
 

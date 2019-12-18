@@ -9,6 +9,8 @@
     </div>
     <div class="col-md-6">
         <div class="float-right" id="data-target">
+            <label>Søgeord:</label>
+            <input id="filter-field" type="text">
             <a href="{{ url_for('main.create_recipe') }}"><input type="submit" value="Lav ny" class="btn btn-danger"></a>
         </div>
     </div>
@@ -19,4 +21,58 @@
     <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe[1]) }}">{{ recipe[0] }}</a></li>
     {% endfor %}
 </ul>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $('#filter-field').focusout(function (e) {
+            var name = $("#filter-field").val(); // filter value
+            $.ajax({
+            type: 'GET',
+            url: '/json/recipes/'+name, // value to query the json with
+            dataType: 'json'
+            }).done(function (data) {
+                if (data.recipes){  // check if the json object contains ingredients
+                    deleteContent("ul.list-group");
+                    $.when(replaceData(data.recipes)).done(function () {
+                        console.log("Done");
+                    });
+                    var title = ""; // set the h3 title
+
+                    if (name != ""){
+                        title = "Opskrifter - søgte: " + name;
+                    } else {
+                        title = "Opskrifter";
+                    }
+                    $('h3').text(title);
+                } else {
+                    console.log(data);
+                    console.log("Error. Something went wrong.");
+                }
+            });
+        });
+
+        function deleteContent(target) { // empty the list group
+            $(target).empty();
+        }
+        function replaceData(response) { // replace data with new data
+            if (response == null){
+                console.log("Error: Response is null");
+                console.log(response);
+            } else {
+                if (response.length !== 0) {
+                    console.log(response);
+                    for (obj of response) { // loop through the data
+                        // these are variables to setup the list group items
+                        var list_group_start = "<li class='list-group-item'>";
+                        var link = "<a href='/recipes/" + obj + "'>" + obj + "</a>";
+                        var list_group_end = "</li>\n";
+                        var element = list_group_start + link + list_group_end;
+                        $('ul.list-group').append(element);
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}
