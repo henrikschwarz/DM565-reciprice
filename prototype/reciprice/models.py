@@ -114,8 +114,13 @@ class Ingredient:
             db.ingredients.update({'name': self.name}, {'$set': {'product_list': self.product_list}})
         return self.product_list
 
-    def get_product_list_titles(self, db=mongo.db):
-        return [i['name'] for i in db.products.find({'ean': {'$in': self.product_list}})]
+    def get_product_list(self, db=mongo.db):
+        if self.alias:
+            eans = get_ingredient(self.alias[0]).product_list
+        else:
+            eans = self.product_list
+
+        return [(i['ean'], i['name']) for i in db.products.find({'ean': {'$in': eans}})]
 
 
 def get_ingredient(name, db=mongo.db):
