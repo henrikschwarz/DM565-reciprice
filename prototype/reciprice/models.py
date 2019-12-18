@@ -105,14 +105,22 @@ class Ingredient:
         self.alias = alias  # different names that are the same ingredient
         self.product_list = product_list  # link the products we have scraped from bilkas website
 
-    def insert(self):
-        ingredients = mongo.db.ingredients
-        return ingredients.insert(self.__dict__)
+    def insert(self, db=mongo.db):
+        return db.ingredients.insert(self.__dict__)
+
+    def add_product_to_list(self, ean, db=mongo.db):
+        if ean not in self.product_list:
+            self.product_list.append(ean)
+            db.ingredients.update({'name': self.name}, {'$set': {'product_list': self.product_list}})
+        return self.product_list
+
+    def get_product_list_titles(self, db=mongo.db):
+        return [i['name'] for i in db.products.find({'ean': {'$in': self.product_list}})]
 
 
-def get_ingredient(name):
-    ingredient = mongo.db.ingredients.find_one_or_404({'name': name})
-    return Ingredient(name=ingredient['name'], alias=['alias'], product_list=['product_list'])
+def get_ingredient(name, db=mongo.db):
+    ingredient = db.ingredients.find_one({'name': name})
+    return Ingredient(name=ingredient['name'], alias=ingredient['alias'], product_list=ingredient['product_list'])
 
 
 class Product:
@@ -141,10 +149,10 @@ class Product:
 
 def create_or_update_product(ean, title, price, amount=1, unit='stk', db=mongo.db):
     existing = db.products.find_one({'ean': ean})
-    if existing is None:
+    if existing is not None:
+        product = Product(existing['name'], existing['amount'], existing['unit'], existing['price'], existing['price_history'], existing['ean'])
+        product.add_price_to_history(price, db)
+    else:
         product = Product(title, amount, unit, price, [price], ean)
         product.insert(db)
-    else:
-        product = Product(existing['name'], existing['amount'], existing['unit'], existing['price'], existing['price_history'])
-        product.add_price_to_history(price, db)
     return product
