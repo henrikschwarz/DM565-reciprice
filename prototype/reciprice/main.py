@@ -3,7 +3,7 @@ import re
 
 import pymongo
 from flask import Blueprint, render_template
-from bson.json_util import dumps
+from bson.json_util import dumps, loads
 from .extentions import mongo
 
 from . import models
@@ -87,8 +87,9 @@ def create_recipe():
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
     recipe = models.get_recipe(name_slash_restored)
-    recipe.procedure = list(recipe.procedure.split("\n"))
-    return render_template('main/recipe.html', recipe=recipe)
+    ingredient = models.get_ingredient(name_slash_restored)
+    product_suggestion = ingredient.get_product_list()
+    return render_template('main/recipe.html', recipe=recipe, product_suggestion=product_suggestion)
 
 
 @main.route("/recipes/")
@@ -121,6 +122,18 @@ def create_ingredient(name):
 
 
 #### Json
+
+@main.route('/json/products/<ingredient_name>')
+def list_products_json(ingredient_name):
+    name_slash_restored = ingredient_name.replace('%2F', '/')
+    ingredient = mongo.db.ingredients.find_one({'name': name_slash_restored})
+    products = []
+    for item in ingredient["product_list"]:
+        product = mongo.db.products.find({'ean': item})
+        products.append(product)
+    data = {'products': products}
+    return dumps(data, ensure_ascii=False)
+
 
 @main.route("/json/recipes/")
 def list_recipes_json():
