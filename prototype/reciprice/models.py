@@ -97,8 +97,6 @@ def get_recipe(name):
 """
 The Ingredient class holds the name of the ingredient, a list of product identifiers, and if it has an alias.
 """
-
-
 class Ingredient:
     def __init__(self, name, product_list=[], alias=[]):
         self.name = name
