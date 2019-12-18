@@ -86,8 +86,8 @@ class Recipe:
 
 
 def get_recipe(name):
-    recipe = mongo.db.recipes.find_one_or_404(name)
-    return Recipe(name=recipe['_id'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'],
+    recipe = mongo.db.recipes.find_one_or_404({'name': name})
+    return Recipe(name=recipe['name'], procedure=recipe['procedure'], ingredient_list=recipe['ingredient_list'],
                   source=recipe['source'],
                   created=recipe['created'])
 
