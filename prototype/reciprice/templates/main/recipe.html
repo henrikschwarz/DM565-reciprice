@@ -6,7 +6,7 @@
     <div class="jumbotron row">
         <h3>{{ recipe.name }}</h3>
         <div class="col-md-12">
-            <h5>Ingrendienser du skal bruger:</h5>
+            <h5>Ingrendienser du skal bruge:</h5>
             <div class="row">
                 <div class="col-md-6">
                     <ul class="list-group">
@@ -35,9 +35,7 @@
         <div class="col-md-12 m-2">
             <hr class="my-4">
             <h5>Fremgangsmåde for opskriften er:</h5>
-            {% for item in recipe.procedure %}
-                <p>{{ item.capitalize() }}</p>
-            {% endfor %}
+                <p>{{ recipe.procedure }}</p>
         </div>
     </div>
     <button type="button" data-toggle="modal" class="hide" data-target="#myModal">Launch modal</button>
@@ -60,6 +58,8 @@
   </div>
 </div>
 {% endblock %}
+<<<<<<< HEAD
+=======
 
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -113,3 +113,4 @@
         });
     </script>
 {% endblock %}
+>>>>>>> 8a56217ed12d8975f6841304054e8880295c602d

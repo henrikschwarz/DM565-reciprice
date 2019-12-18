@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 import re
-
 import pymongo
 from flask import Blueprint, render_template
 from bson.json_util import dumps, loads
@@ -87,8 +86,7 @@ def recipe_get(name):
         ingredient = models.get_ingredient(item_name)
         products.append(','.join(ingredient.get_product_ean_list()))
     product_suggestion = products
-    recipe.procedure = list(recipe.procedure.split("\n"))
-    print(product_suggestion)
+    recipe.procedure = (''.join([each.capitalize() for each in re.split('([.!?] *)', (re.sub('\r\n|\n\r\n', " ", recipe.procedure)))]))
     return render_template('main/recipe.html', recipe=recipe, product_suggestion=product_suggestion)
 
 

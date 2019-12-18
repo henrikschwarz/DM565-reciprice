@@ -7,6 +7,8 @@ db = MongoClient(MONGO_URI).innovation
 
 def update_suggestions(ingredient):
     query_response = query_product_suggestions(ingredient)
+    if query_response is None:
+        return
     try:
         retry_in = query_response['Retry-After']
         print(retry_in)
@@ -18,7 +20,10 @@ def update_suggestions(ingredient):
         suggestions = query_response['suggestions']
         products = []
         for suggestion in suggestions:
-            products.append(create_or_update_product(suggestion['eans'], suggestion['title'], suggestion['price'], db=db))
+            try:
+                products.append(create_or_update_product(suggestion['eans'], suggestion['title'], suggestion['price'], db=db))
+            except KeyError:
+                pass
 
         ingredient = get_ingredient(ingredient, db=db)
 
@@ -31,9 +36,8 @@ def update_suggestions(ingredient):
 
 
 def populate_suggestions():
-    ingredients = db.ingredients.find({'alias':{'$size': 0}})
+    ingredients = db.ingredients.find({'alias':{'$size': 0}, 'product_list':{'$size': 0}})
     for ingredient in ingredients:
         update_suggestions(ingredient['name'])
 
-update_suggestions('salt')
-#populate_suggestions()
+populate_suggestions()
