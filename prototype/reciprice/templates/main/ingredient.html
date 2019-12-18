@@ -19,7 +19,7 @@
         <li class="recipe-list">Opskrifter
             <ul>
                 {% for item in used_in %}
-                    <li class="recipe-list-item"><a href="{{ url_for('main.recipe_get', name=item) }}">{{ item }}</a></li>
+                    <li class="recipe-list-item"><a href="{{ url_for('main.recipe_get', name=item[1]) }}">{{ item[0] }}</a></li>
                 {% endfor %}
             </ul>
         </li>

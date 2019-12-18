@@ -12,8 +12,7 @@ main = Blueprint("main", __name__)
 
 @main.route('/')
 def index():
-    userlist = models.get_usernames()
-    return render_template("main/index.html", userlist=userlist)
+    return render_template("main/index.html", userlist=models.get_usernames())
 
 
 @main.route("/login")
@@ -31,7 +30,7 @@ def user_profile(username):
 @main.route("/user/<username>/create")
 def create_user(username):
     users = mongo.db.users
-    users.insert({'_id': username, 'created': datetime.now(timezone.utc)})
+    users.insert({'username': username, 'created': datetime.now(timezone.utc)})
     return '<h1>Created %s!</h1>' % str(username)
 
 
@@ -90,5 +89,6 @@ def list_specific_ingredient_json(name):
 @main.route("/ingredients/<name>")
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
-    used_in = [i['name'] for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}})]
+    #used_in is a list consisting of tuple (reader-friendly_name, url_name) for each recipe that contains the ingredient
+    used_in = [(re.sub("\d+$", "", i['name']).strip(), i['name'].replace('/', '%2F')) for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}})]
     return render_template("main/ingredient.html", ingredient=ingredient, used_in=used_in)
