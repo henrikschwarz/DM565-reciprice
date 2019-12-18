@@ -310,7 +310,14 @@ results.
 
 With the function \texttt{execute\_get\_in\_parallel} we give it the \texttt{recipe\_id}
 to start from and the \texttt{no\_recipes} to scrape. We then pass the name from a
-function to be run in parallel.
+function to be run in parallel. At first a list of urls to crawl is created. Then we take
+the \texttt{cpu\_count} of the system to determine the amount threads to spawn. We then
+create a \texttt{ThreadPoolExecutor} with \texttt{cpu\_count} threads. In line 6 we then
+submit the \texttt{function} and \texttt{url} for a thread from the pool to work on. As
+this happens asynchronously, we have no guarantee for when the executors will be done
+working. Because of this the executors returns the results in a \texttt{Future} object. We
+can iterate over this list of \texttt{Futures} as the executors finish. We then the
+results of all the functions are returned in a list for further processing.
 
 \subsection{Sanitizing Data}
 
