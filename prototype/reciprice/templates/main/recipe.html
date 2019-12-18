@@ -18,7 +18,7 @@
                 <div class="col-md-6">
                     <ul class="list-group">
                     {% for product in product_suggestion %}
-                            <li target="{{ product[0] }}" class="list-group-item">Vælg et {{ product[1] }}...</li>
+                            <li id="add-product" target="{{ product }}" class="list-group-item">Vælg et produkt...</li>
                     {% endfor %}
                     </ul>
                 </div>
@@ -33,4 +33,21 @@
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+        $('#add-product').click(function (e) {
+            var target = $(this).attr('target'); // ean list value
+            console.log(target);
+            let r = $.ajax({
+                type: 'GET',
+                async: false,
+                url: '/json/product/' + target, // value to query the json with
+                dataType: 'json'
+            }).responseJSON;
+            console.log(r);
+        });
+    </script>
 {% endblock %}
