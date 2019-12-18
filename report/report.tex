@@ -384,21 +384,21 @@ web framework, because it is fast, secure and easy to use.
 
 The language can use control expressions like if statements and for loops. It
 also use of blocks and macros. Blocks are used for template inheritance which
-allows us to create resusable templates. The tempaltes are created as html files
+allows us to create reusable templates. The templates are created as html files
 where we add the control structures using Jinja2 expressions. We have defined
 a base template that imports css and scripts that are used by all the templates.
 Using blocks other templates can add to the base template. In our case the base
 template is 'templates/main/base.html'. We then reuse that template to create
-other templates and avoid alot of duplicate html code.
+other templates and avoid a lot of duplicate html code.
 
 \paragraph{jQuery and Ajax}
 jQuery is a javascript framework that enables easy HTML DOM, event handling,
-css animation and ajax requests. It treats html documents like a three stucture,
+css animation and ajax requests. It treats html documents like a three structure,
 which lets us easily add and remove html elements. 
 
-Ajax is asyncronouns javascript and XML which can be used to make asyncronouns
-web applications. We use it primarily to query data on the backend and then show
-it using jQuery on the frontend.
+Ajax is asynchronous javascript and XML which can be used to make asynchronous
+web applications. We use it primarily to query data on the back-end and then show
+it using jQuery on the front-end.
 
 \paragraph{Views}
 Our webapp has to primary views which are:
@@ -414,11 +414,11 @@ names that match a regular expression. The recipes can then be access
 individually using links from the list.
 
 We can also create a new list using the 'lav ny' button which redirects to a
-view with a form. The form has a field called 'Ingrediens' where if we write
+view with a form. The form has a field called 'Ingredients' where if we write
 something of four characters length and press down we get a list of viable
-ingredients. We then add a a amount and a unit and press 'Add ingrediens' to add
+ingredients. We then add a amount and a unit and press 'Add ingredients' to add
 it to the recipe. When filled out we can press 'send' and send the data to our
-backend where it is validated and added to the database.
+back-end where it is validated and added to the database.
 
 \subparagraph{Ingredients}
 Ingredients has a list view just like recipes where all the ingredients are
