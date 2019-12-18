@@ -213,6 +213,29 @@ Our goal in creating a prototype of the idea is to showcase the concept of the i
 
 \subsection{System Architecture}
 
+On figure \ref{fig:layerstructure} the overall structure of the system is shown. This is a
+three layer architecture. Here the User Interface(UI) is the top layer. This is where the
+user interacts with the system. The Domain layer is where the logic is located. The domain
+layer interacts with the UI. The Domain layer is where we process requests for eg. a
+specific recipe. The Domain layer then interacts with the database, requesting the right
+data in the form of queries. The data scraper is a module to the system. The role of data
+scraper is to populate the database with the correct data.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+     \draw (0,0) rectangle (2,-0.75) node[pos=0.5] {UI}; 
+     \draw[<->] (1,-0.75) -- (1,-1.25) ;
+    \draw (0,-1.25) rectangle (2,-2) node[pos=0.5] {Domain}; 
+    \draw[<->] (1,-2) -- (1,-2.5);
+    \draw (0,-2.5) rectangle (2,-3.25) node[pos=0.5] {Database}; 
+    \draw[<-] (2,-2.875) -- (2.5, -2.875);
+    \draw (2.5, -2.5) rectangle (4.5, -3.25) node[pos=.5] {Data scraper} ;
+  \end{tikzpicture}
+  \caption{Architecture of the system}
+  \label{fig:layerstructure}
+\end{figure}
+
 \subsection{Scraping Data}
 
 \subsection{Sanitizing Data}
