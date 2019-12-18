@@ -88,14 +88,12 @@ returns a list of results provided by the function given
 
 def execute_get_in_parallel(recipe_id, no_recipes, function):
     urls = create_urls(recipe_id, no_recipes)
-
     results = []
     thread_count = multiprocessing.cpu_count()
     with ThreadPoolExecutor(max_workers=thread_count) as executor:
         futures = [executor.submit(function, url) for url in urls]
         for result in as_completed(futures):
             results.append(result.result())
-
     return results
 
 
