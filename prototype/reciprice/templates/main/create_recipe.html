@@ -2,6 +2,22 @@
 
 {% block head %}
     <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+    <style>
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+    }
+    /* IE 6 doesn't support max-height
+    * we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+        height: 100px;
+    }
+    </style>
 {% endblock %}
 
 {% block title %} Lav opskrift {% endblock %}
@@ -28,9 +44,9 @@
                     </div>
                     <div class="col-md-2">
                         <label>Enhed</label>
-                        <select id="select-data">
+                        <select id="select-data" class="form-control">
                             <option value="ml">ml</option>
-                            <option value="gram">Gram</option>
+                            <option value="gram">g</option>
                             <option value="tsk">Tsk</option>
                             <option value="spk">Spk</option>
                         </select>
@@ -46,6 +62,8 @@
         </div>
         <input type="submit" value="Send" class="btn btn-success">
     </form>
+    <div class="ui-widget" style="margin-top:2em; font-family:Arial">
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -64,26 +82,40 @@
 </script>
 <script>
     $(function() {
-        var availableTutorials = [
-            "ActionScript",
-            "Bootstrap",
-            "C",
-            "C++",
-            "Ecommerce",
-            "Jquery",
-            "Groovy",
-            "Java",
-            "JavaScript",
-            "Lua",
-            "Perl",
-            "Ruby",
-            "Scala",
-            "Swing",
-            "XHTML"
-        ];
+        function getData(){
+            var r = $.ajax({
+            type: 'GET',
+            async: false,
+            url: '/json/ingredients/'+request.term, // value to query the json with
+            dataType: 'json'
+            }).responseJSON;
+            console.log(r.ingredients);
+            return r.ingredients;
+        }
+
+        function setField(data){
+            $('#auto-ingredient').val(data);
+        }
 
         $('#auto-ingredient').autocomplete({
-            source: availableTutorials,
+            source: function( request, response ) {
+                $.ajax( {
+                    url: "/json/ingredients/"+request.term,
+                    dataType: "json",
+                    data: {
+                },
+                    success: function( data ) {
+                        console.log(data);
+                        response( data.ingredients );
+                    }
+                });
+            },
+            minLength: 4,
+            select: function (event, ui) {
+                console.log(ui.item);
+                setField(ui.item.value);
+            },
+            delay: 500,
         });
 
         $('#add-extra-input').click(function () {

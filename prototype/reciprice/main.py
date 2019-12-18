@@ -37,7 +37,7 @@ def create_user(username):
 @main.route("/recipe/create", methods=["GET", "POST"])
 def create_recipe():
     if request.method == "POST":
-        error = False # primitive way yo check for errors
+        error = False  # primitive way to check for errors
         data = {}
         if request.form["recipe-name"]:
             data["name"] = request.form["recipe-name"]
@@ -71,8 +71,6 @@ def create_recipe():
         data["source"] = "useradded"
         return data
 
-
-
     return render_template("main/create_recipe.html")
 
 
@@ -85,7 +83,8 @@ def recipe_get(name):
 @main.route("/recipes/")
 def list_recipes():
     recipes = mongo.db.recipes.distinct('name')
-    return render_template("main/recipes.html", recipes=[(re.sub("\d+$", "", i).strip(), i.replace('/', '%2F')) for i in recipes])
+    return render_template("main/recipes.html",
+                           recipes=[(re.sub("\d+$", "", i).strip(), i.replace('/', '%2F')) for i in recipes])
 
 
 @main.route("/ingredients_json/")
@@ -93,7 +92,7 @@ def ingredients_json():
     ingredients = mongo.db.ingredients.find({"name": {"$in": ["h"]}})
     dict_ingredient = dict()
     for item in ingredients:
-        dict_ingredient[item["name"]] = item
+        dict_ingredient[item["name"]] = item.name
 
     return dict_ingredient
 
@@ -116,7 +115,10 @@ def create_ingredient(name):
 def list_ingredients_json():
     ingredient_dict = dict()
     ingredients = mongo.db.ingredients.find()
-    ingredient_dict["ingredients"] = list(ingredients)
+    l = []
+    for item in ingredients:
+        l.append(item["name"])
+    ingredient_dict["ingredients"] = l
     return dumps(ingredient_dict, ensure_ascii=False)
 
 
@@ -125,12 +127,17 @@ def list_specific_ingredient_json(name):
     ingredient_dict = dict()
     regex = r'%s' % name
     ingredients = mongo.db.ingredients.find({"name": {"$regex": regex}})
-    ingredient_dict["ingredients"] = ingredients
+    l = []
+    for item in ingredients:
+        l.append(item["name"])
+    ingredient_dict["ingredients"] = l
     return dumps(ingredient_dict, ensure_ascii=False)
+
 
 @main.route("/ingredients/<name>")
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
-    #used_in is a list consisting of tuple (reader-friendly_name, url_name) for each recipe that contains the ingredient
-    used_in = [(re.sub("\d+$", "", i['name']).strip(), i['name'].replace('/', '%2F')) for i in mongo.db.recipes.find({'ingredient_list':{'$elemMatch':{'$elemMatch':{'$eq':name}}}})]
+    # used_in is a list consisting of tuple (reader-friendly_name, url_name) for each recipe that contains the ingredient
+    used_in = [(re.sub("\d+$", "", i['name']).strip(), i['name'].replace('/', '%2F')) for i in
+               mongo.db.recipes.find({'ingredient_list': {'$elemMatch': {'$elemMatch': {'$eq': name}}}})]
     return render_template("main/ingredient.html", ingredient=ingredient, used_in=used_in)
