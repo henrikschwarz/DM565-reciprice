@@ -2,16 +2,10 @@ import concurrent
 
 from bs4 import BeautifulSoup
 import re
-import sys
 import time
 import urllib.request
 import multiprocessing
-<<<<<<< HEAD
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from concurrent.futures import Future
-=======
-from concurrent.futures import ThreadPoolExecutor, as_completed, Future, ALL_COMPLETED
->>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
+from concurrent.futures import ThreadPoolExecutor, as_completed, ALL_COMPLETED
 from pymongo import MongoClient
 from mongoenv import MONGO_URI
 from reciprice.models import *
@@ -30,10 +24,6 @@ def create_urls(recipe_id, no_recipes):
     urls = []
     for i in range(no_recipes):
         urls.append(ingredient_base_url % str(int(recipe_id) + i))
-<<<<<<< HEAD
-=======
-
->>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
     return urls
 
 
@@ -85,14 +75,8 @@ def get_ingredients(url):
             span.extract()
         i_t = clean_soup(ingredient)
 
-        if len(i_t) > 0:
-            if rege.search(i_t) == None:
-                ingredients.append(i_t)
-
-<<<<<<< HEAD
-=======
-
->>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031
+        if len(i_t) > 0 and rege.search(i_t) == None:
+            ingredients.append(i_t)
     return ingredients
 
 
@@ -157,12 +141,9 @@ def populate_ingredient_whitelist():
                         'amount', -1):
                     if related_item['name'] != item['name']:
                         related_ing = Ingredient(related_item['name'], [], [item['name']])
-<<<<<<< HEAD
+
                         ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,
                                                           upsert=True)
-=======
-                        ingredient_collection.replace_one({'name': related_item['name']}, related_ing.__dict__,upsert=True)
-
 
 def is_whitelisted(ingredient):
     return client.innovation.ingredients.find_one({'name': ingredient})
@@ -218,4 +199,3 @@ def scrape_recipes(start=0, end=39027):
     print('Database now has', client.innovation.recipes.count_documents({}), 'recipes.')
 
 #scrape_recipes(start=0)
->>>>>>> e34186af22dfe44e8f1f2a8273fee7ea39e24031

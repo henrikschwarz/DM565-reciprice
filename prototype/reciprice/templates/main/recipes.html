@@ -3,17 +3,20 @@
 {% block title %} Opskrifter {% endblock %}
 
 {% block content %}
-    <h2>Opskrifter</h2>
-    <div class="col-md-12 m-2 float-left">
-        <div class="col-md-4">
+<div class="row" style="padding-bottom: 8px;">
+    <div class="col-md-6">
+        <h3>Opskrifter</h3>
+    </div>
+    <div class="col-md-6">
+        <div class="float-right" id="data-target">
             <a href="{{ url_for('main.create_recipe') }}"><input type="submit" value="Lav ny" class="btn btn-danger"></a>
         </div>
     </div>
-    <div class="clearfix"></div>
-    <ul class="list-group">
-        {%  for recipe in recipes %}
-        <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe.name) }}">{{ recipe.name }}</a></li>
-        {% endfor %}
-    </ul>
 </div>
+<div class="clearfix"></div>
+<ul class="list-group">
+    {%  for recipe in recipes %}
+    <li class="list-group-item"><a href="{{ url_for('main.recipe_get', name=recipe[1]) }}">{{ recipe[0] }}</a></li>
+    {% endfor %}
+</ul>
 {% endblock %}

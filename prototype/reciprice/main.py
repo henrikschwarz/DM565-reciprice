@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 import re
 
+import pymongo
+from flask import Blueprint, render_template
 from bson.json_util import dumps
 from .extentions import mongo
 
@@ -68,8 +70,15 @@ def create_recipe():
             print("error")
             return render_template('main/create_recipe.html')
 
+        flash('Success, opskrift er tiløjet!')
+
         data["source"] = "useradded"
-        return data
+        data["created"] = datetime.utcnow()
+
+        mongo.db.recipes.insert(data)
+        name = data['name'].replace('/', '%2F')
+
+        return redirect(url_for('main.recipe_get', name=name))
 
     return render_template("main/create_recipe.html")
 
