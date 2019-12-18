@@ -309,7 +309,7 @@ results.
 ]{../prototype/scrape_recipe_ingredients.py}
 
 With the function \texttt{execute\_get\_in\_parallel} we give it the \texttt{recipe\_id}
-to start from and the \texttt{no\_recipes} to scrape. We then pass the name from a
+to start from and the \texttt{no\_recipes} to scrape. We then pass the name of a
 function to be run in parallel. At first a list of urls to crawl is created. Then we take
 the \texttt{cpu\_count} of the system to determine the amount threads to spawn. We then
 create a \texttt{ThreadPoolExecutor} with \texttt{cpu\_count} threads. In line 6 we then
@@ -319,7 +319,15 @@ working. Because of this the executors returns the results in a \texttt{Future} 
 can iterate over this list of \texttt{Futures} as the executors finish. We then the
 results of all the functions are returned in a list for further processing.
 
+The function to get ingredients from a url is \texttt{get\_ingredients(url)}, this
+function exclusively extracts the ingredients of recipe. It extracts this data from a
+specific table in the HTML document. This is used make a dictionary of the frequencies of
+different "ingredients" present in a recipe.
+
 \subsection{Sanitizing Data}
+When working with user-submitted data we face a huge issue of varying name to describe the
+same thing. An example of this is: 'pepper' and 'black pepper', which essentially is the
+same thing. However our system of course does not know this.
 
 \subsection{Getting Prices}
 
