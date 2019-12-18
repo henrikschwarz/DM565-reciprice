@@ -86,7 +86,8 @@ def create_recipe():
 @main.route("/recipe/<name>")
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
-    return '<h1>found %s!</h1>' % models.get_recipe(name_slash_restored)
+    recipe = models.get_recipe(name_slash_restored)
+    return render_template('main/recipe.html', recipe=recipe)
 
 
 @main.route("/recipes/")

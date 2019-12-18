@@ -1,0 +1,34 @@
+{% extends "main/base.html" %}
+
+{% block title %} {{ recipe.name }} {% endblock %}
+
+{% block content %}
+    <div class="jumbotron row">
+        <h3>{{ recipe.name }}</h3>
+        <div class="col-md-12">
+            <h5>Ingrendienser du skal bruger:</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group">
+                    {% for item_list in recipe.ingredient_list %}
+                            <li class="list-group-item">{{ item_list[0] }} {{ item_list[1] }} {{ item_list[2] }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul class="list-group">
+                    {% for item_list in recipe.ingredient_list %}
+                            <li class="list-group-item">Vælg et produkt...</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 m-2">
+            <hr class="my-4">
+            <h5>Fremgangsmåde for opskriften er:</h5>
+            <p>{{ recipe.procedure }}</p>
+        </div>
+    </div>
+{% endblock %}
