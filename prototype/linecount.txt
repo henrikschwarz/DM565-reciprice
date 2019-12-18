@@ -1,0 +1,19 @@
+. ingredient_product_suggestions.py 43
+. mongoenv.py 1
+. run.py 6
+. scrape_recipe_ingredients.py 199
+. source_line_count.py 28
+./reciprice/templates/main ingredients.html 78
+./reciprice/templates/main ingredient.html 31
+./reciprice/templates/main recipes.html 78
+./reciprice/templates/main index.html 13
+./reciprice/templates/main recipe.html 54
+./reciprice/templates/main create_recipe.html 163
+./reciprice/templates/main base.html 61
+./reciprice extentions.py 5
+./reciprice main.py 191
+./reciprice salling.py 26
+./reciprice __init__.py 20
+./reciprice models.py 170
+./reciprice settings.py 3
+1170

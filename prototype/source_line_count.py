@@ -3,7 +3,6 @@ from os import listdir
 extensions = ['py', 'html']
 linecount = 0
 a = [i for i in listdir()]
-a.remove('venv')
 
 def file_len(fname):
     with open(fname) as f:
