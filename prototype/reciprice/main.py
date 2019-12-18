@@ -87,12 +87,6 @@ def list_specific_ingredient_json(name):
     return dumps(ingredient_dict, ensure_ascii=False)
 
 
-@main.route("/ingredients/<name>/create")
-def create_ingredient(name):
-    ing = models.Ingredient(name, [], [])
-    return '<h1>found %s!</h1>' % ing.insert()
-
-
 @main.route("/ingredients/<name>")
 def get_ingredient(name):
     ingredient = mongo.db.ingredients.find_one_or_404({"name": name})
