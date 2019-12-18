@@ -11,10 +11,14 @@
 \usepackage{tikz} 
 \usepackage{float}
 \usepackage{verbatim} 
+\usepackage{xcolor}
 \title{DM565 Innovation Project} 
 \author{authors} 
 \date{\today}
 
+\definecolor{commentsColor}{rgb}{0.497495, 0.497587, 0.497464}
+\definecolor{keywordsColor}{rgb}{0.000000, 0.000000, 0.635294}
+\definecolor{stringColor}{rgb}{0.558215, 0.000000, 0.135316}
 
 \begin{document}
 
@@ -209,7 +213,8 @@ quickly outgrow the revenue streams.
 
 
 \section{Prototyping}
-Our goal in creating a prototype of the idea is to showcase the concept of the idea.
+Our goal in creating a prototype of the idea is to showcase the concept of the idea. We
+have chosen Python to create the product, as we can produce concise code quickly. 
 
 \subsection{System Architecture}
 
@@ -219,7 +224,8 @@ user interacts with the system. The Domain layer is where the logic is located. 
 layer interacts with the UI. The Domain layer is where we process requests for eg. a
 specific recipe. The Domain layer then interacts with the database, requesting the right
 data in the form of queries. The data scraper is a module to the system. The role of data
-scraper is to populate the database with the correct data.
+scraper is to populate the database with the correct data. The data scraper also filters
+data before inserting inserting it into the database.
 
 \begin{figure}[H]
   \centering
@@ -236,7 +242,82 @@ scraper is to populate the database with the correct data.
   \label{fig:layerstructure}
 \end{figure}
 
+Regarding the structure of the database we will need to map the user-submitted ingredients
+found in recipes to a list of known ingredients. The known list of ingredients, can be
+used to query price data. Thus we present the following data structure:
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}
+    \draw (0,0) rectangle (2,3) node[pos=.5] {Recipes};
+     \draw (3,0) rectangle (5,3)node[pos=.5] {Ingredients};
+     \draw[->,thick] (5,1.5) -- (6,1.5);
+     \draw[->,thick] (2,1.5) -- (3,1.5);
+     \draw (6,0) rectangle (8,3)node[pos=.5] {Product};
+  \end{tikzpicture}
+  \caption{Overview of the data structure}
+\end{figure}
+
+Here we have a list of recipes, the ingredients of these recipes points to a dictionary of
+ingredients, which all have unique names. There is no recipes, which ingredients are not
+in the dictionary of approved ingredients. Ingredients can have an alias which points to
+another ingredient, which is more general.  The dictionary of ingredients, each have an
+array of products that they point to. This achieves a separation of recipes and their
+prices. 
+
 \subsection{Scraping Data}
+
+We will scraping recipe data from a well-known website called \\\url{www.dk-kogebogen.dk}.
+The recipes from this site are user-made, and are thus filled with all sorts of quirks. As
+we have using Python we will be using the BeautifulSoup package to help scrap the data from the
+site. We want to scrape the table containing the ingredients of the recipe, amounts of the
+ingredients and the units of these amounts. We also want the procedure for scraping the
+recipe and the title of the recipe. We have identifies that there are in the order of
+39027 different recipes numbered in sequential order. As downloading a lot of sites
+sequentially is quite slow, it makes sense to do this in parallel. Thus the more
+connections we make to the website we would like to scrape, the faster we can get our
+results.
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\tiny,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{commentsColor}\textit,    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=tb,	                   	   % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{keywordsColor}\bfseries,       % keyword style
+  language=Python,                 % the language of the code (can be overrided per snippet)
+  otherkeywords={*,...},           % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{commentsColor}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{stringColor}, % string literal style
+  tabsize=2,	                   % sets default tabsize to 2 spaces
+                  % show the filename of files included with \lstinputlisting; also try caption instead of title
+  columns=fixed                    % Using fixed column width (for e.g. nice alignment)
+}
+\lstinputlisting[language=Python, firstline=89, lastline=97, basicstyle=\footnotesize\ttfamily,
+]{../prototype/scrape_recipe_ingredients.py}
+
+With the function \texttt{execute\_get\_in\_parallel} we give it the \texttt{recipe\_id}
+to start from and the \texttt{no\_recipes} to scrape. We then pass the name from a
+function to be run in parallel. At first a list of urls to crawl is created. Then we take
+the \texttt{cpu\_count} of the system to determine the amount threads to spawn. We then
+create a \texttt{ThreadPoolExecutor} with \texttt{cpu\_count} threads. In line 6 we then
+submit the \texttt{function} and \texttt{url} for a thread from the pool to work on. As
+this happens asynchronously, we have no guarantee for when the executors will be done
+working. Because of this the executors returns the results in a \texttt{Future} object. We
+can iterate over this list of \texttt{Futures} as the executors finish. We then the
+results of all the functions are returned in a list for further processing.
 
 \subsection{Sanitizing Data}
 
