@@ -17,8 +17,8 @@
                 </div>
                 <div class="col-md-6">
                     <ul class="list-group">
-                    {% for item_list in recipe.ingredient_list %}
-                            <li class="list-group-item">Vælg et produkt...</li>
+                    {% for product in product_suggestion %}
+                            <li target="{{ product[0] }}" class="list-group-item">Vælg et {{ product[1] }}...</li>
                     {% endfor %}
                     </ul>
                 </div>

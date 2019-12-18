@@ -100,7 +100,7 @@ The Ingredient class holds the name of the ingredient, a list of product identif
 
 
 class Ingredient:
-    def __init__(self, name, product_list, alias=[]):
+    def __init__(self, name, product_list=[], alias=[]):
         self.name = name
         self.alias = alias  # different names that are the same ingredient
         self.product_list = product_list  # link the products we have scraped from bilkas website
@@ -114,8 +114,13 @@ class Ingredient:
             db.ingredients.update({'name': self.name}, {'$set': {'product_list': self.product_list}})
         return self.product_list
 
-    def get_product_list_titles(self, db=mongo.db):
-        return [i['name'] for i in db.products.find({'ean': {'$in': self.product_list}})]
+    def get_product_list(self, db=mongo.db):
+        if self.alias:
+            eans = get_ingredient(self.alias[0]).product_list
+        else:
+            eans = self.product_list
+
+        return [(i['ean'], i['name']) for i in db.products.find({'ean': {'$in': eans}})]
 
 
 def get_ingredient(name, db=mongo.db):
