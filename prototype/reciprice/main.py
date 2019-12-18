@@ -87,6 +87,7 @@ def create_recipe():
 def recipe_get(name):
     name_slash_restored = name.replace('%2F', '/')
     recipe = models.get_recipe(name_slash_restored)
+    recipe.procedure = list(recipe.procedure.split("\n"))
     return render_template('main/recipe.html', recipe=recipe)
 
 
@@ -160,7 +161,7 @@ def list_ingredients_json():
 def list_specific_ingredient_json(name):
     ingredient_dict = dict()
     regex = r'.*%s.*' % name
-    ingredients = mongo.db.ingredients.find({"name": {"$regex": regex}})
+    ingredients = mongo.db.ingredients.find({"name": {"$regex": regex, '$options' : 'i'}})
     l = []
     for item in ingredients:
         l.append(item["name"])
