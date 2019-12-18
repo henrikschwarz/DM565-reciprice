@@ -16,11 +16,18 @@
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <ul class="list-group">
+                    <ul id="price-groups" class="list-group">
                     {% for product in product_suggestion %}
                             <li id="add-product" target="{{ product }}" class="list-group-item">Vælg et produkt...</li>
                     {% endfor %}
                     </ul>
+                </div>
+                <div class="row">
+
+                </div>
+                <div class="col-md-12">
+                    <span id="calc-price" class="btn btn-info">Regn pris ud</span>
+                    <h4 id="price-target"</h3>
                 </div>
             </div>
         </div>
@@ -33,21 +40,76 @@
             {% endfor %}
         </div>
     </div>
+    <button type="button" data-toggle="modal" class="hide" data-target="#myModal">Launch modal</button>
+
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Select product</h5>
+        <button type="button" class="close" id="close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="modal-content" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="save-modal" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        $('#add-product').click(function (e) {
+        var select_li = "";
+        $(document).on('click', '#add-product', function () {
+            select_li = $(this);
             var target = $(this).attr('target'); // ean list value
-            console.log(target);
-            let r = $.ajax({
+            var r = $.ajax({
                 type: 'GET',
                 async: false,
-                url: '/json/product/' + target, // value to query the json with
+                url: '/json/products/' + target, // value to query the json with
                 dataType: 'json'
             }).responseJSON;
-            console.log(r);
+            var products = r.products;
+            if (r.products.langth == 0){
+                console.log("Error");
+                return;
+            }
+            var modal_content = $('#modal-content');
+            modal_content.empty();
+            modal_content.append('<select>');
+            modal_content.children('select').append('<option value="0">Har ingrediens - 0 kr');
+            for (product of products){
+                modal_content.children('select').append("<option value='"+product.price+"'>"+product.name+" - "+product.price+"kr");
+            }
+            modal_content.append('</select>');
+            $('.modal').toggle();
+        }).on('click', '#save-modal', function () {
+            var price = $('#modal-content').children('select').val();
+            var text = $('#modal-content select option[value="'+price+'"]').html();
+            select_li.html('<div value="'+price+'">'+text+'</div>');
+            $('.modal').toggle();
+        });
+        $('#close-modal').on('click',function () {
+            $('.modal').toggle();
+        });
+        $('#calc-price').on('click', function () {
+            var price = 0;
+            var listItems = $("#price-groups li");
+                listItems.each(function(idx, li) {
+                    var product = $(li).children('div');
+                    var product_attr = product.attr('value');
+                    if (typeof product_attr !== typeof undefined && product_attr !== false) {
+                        var string_price = product.attr('value');
+                        price = price + Number(string_price);
+                    }
+            });
+            $('#price-target').empty();
+            $('#price-target').html('Price: '+ price+' kr.');
         });
     </script>
 {% endblock %}
