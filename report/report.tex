@@ -325,9 +325,33 @@ specific table in the HTML document. This is used make a dictionary of the frequ
 different "ingredients" present in a recipe.
 
 \subsection{Sanitizing Data}
+\subsubsection{Creating the Ingredient Frequency Collection}
 When working with user-submitted data we face a huge issue of varying name to describe the
 same thing. An example of this is: 'pepper' and 'black pepper', which essentially is the
-same thing. However our system of course does not know this.
+same thing. However our system of course does not know this. The ingredient data also
+contains parentheses and other special characters, which to not belong. There is also
+numerous typing errors, and many ingredients have adjectives attached eg. 'large onion',
+'cold water', etc. thus we need a way to identify, which ingredients are the correct ones.
+We decided that the most frequent ingredients used must be of some validity, the same type
+errors are unlikely to manifest themselves over and over in a relatively limited dataset.
+At first we decided to filter out all ingredients with special characters with a regular
+expression. \lstinline[basicstyle=\normalsize\ttfamily]{'.*(\(|-|/|:|\.).*'}, thus
+ingredients containing these are not considered. When inserting the frequencies of the
+ingredients into the \texttt{ingredient\_frequency} collection in the database, we need to
+count how many times the ingredient occurs in a list. However this list contains
+\textit{every} ingredient from every recipe(apart from the ones containing special
+characters). To optimize the running time of this, when we have created a dictionary with
+the name of a ingredient and its frequency, we insert the name of the ingredient into a
+dictionary. Here we remember that it is much faster to lookup a key in a dictionary as
+opposed to iterating through an entire list. Thus as we go through item, we have an
+effective way of not checking for the frequency of the same ingredient over and over. This
+reduced the running time of creating the ingredient frequency collection from above an
+hour(did not finish), to about 25 minutes.
+
+\subsubsection{Populating the Ingredient Collection}
+
+
+
 
 \subsection{Getting Prices}
 
