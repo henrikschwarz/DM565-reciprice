@@ -1,4 +1,5 @@
-import flask
+import re
+
 from flask import Blueprint, render_template
 from bson.json_util import dumps
 from .extentions import mongo
@@ -50,8 +51,7 @@ def recipe_get(name):
 @main.route("/recipes/")
 def list_recipes():
     recipes = mongo.db.recipes.distinct('name')
-
-    return render_template("main/recipes.html", recipes=[(i, i.replace('/', '%2F')) for i in recipes])
+    return render_template("main/recipes.html", recipes=[(re.sub("\d+$", "", i).strip(), i.replace('/', '%2F')) for i in recipes])
 
 
 @main.route("/ingredients_json/")

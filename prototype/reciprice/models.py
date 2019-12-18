@@ -11,6 +11,7 @@ class User:
     # Returns the dictionary key that identifies this user
     def get_id(self):
         return self.username
+
     def get_filter(self):
         return {'username': self.username}
 
